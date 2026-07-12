@@ -1683,3 +1683,81 @@ body.wa-no-scroll {
     height: 190px;
   }
 }
+/* ===== Mobile Hero Fix ===== */
+
+@media (max-width: 700px) {
+
+  .hero {
+    overflow: visible;
+    padding: 42px 0 56px;
+  }
+
+  .hero-inner {
+    grid-template-columns: 1fr;
+    gap: 28px;
+  }
+
+  .hero-copy {
+    width: 100%;
+    min-width: 0;
+  }
+
+  .hero-copy h1 {
+    font-size: 34px;
+    line-height: 1.15;
+  }
+
+  .hero-sub,
+  .hero-body,
+  .hero-value {
+    max-width: 100%;
+  }
+
+  .hero-cta-row .btn {
+    width: 100%;
+    white-space: normal;
+    text-align: center;
+    line-height: 1.35;
+  }
+
+  .hero-visual {
+    width: 100%;
+    height: 280px;
+    overflow: visible;
+    margin-top: 8px;
+  }
+
+  .float-card {
+    padding: 9px 12px;
+    font-size: 12px;
+  }
+
+  .card-excel {
+    top: 8%;
+    left: 3%;
+  }
+
+  .card-fintech {
+    top: 8%;
+    right: 3%;
+  }
+
+  .card-ops {
+    bottom: 10%;
+    left: 3%;
+  }
+
+  .card-interview {
+    bottom: 8%;
+    right: 3%;
+  }
+}
+
+@media (max-width: 700px) {
+  .hero-img {
+    width: 100%;
+    max-width: 320px;
+    height: auto;
+    object-fit: contain;
+  }
+}
