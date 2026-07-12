@@ -218,8 +218,7 @@ document.addEventListener('DOMContentLoaded', () => {
     // Industry Topics" heading/CTA copy.
     const INDUSTRY_KEYWORDS = [
       'UPI', 'BBPS', 'KYC', 'AML', 'Cards', 'Visa', 'RuPay', 'NPCI', 'NACH',
-      'Payment Gateway', 'Payment Aggregator', 'Cross-Border Payments',
-      'Excel', 'Power BI', 'Corporate Culture'
+      'Excel', 'Power BI', 
     ];
 
     // Reuses the same accent palette already used elsewhere on the site
