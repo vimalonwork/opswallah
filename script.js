@@ -214,8 +214,8 @@ document.addEventListener('DOMContentLoaded', () => {
     // Keyword-only vocabulary — Claude's selection from the Banking &
     // FinTech domain. Text pills only, nothing brand-specific.
     const INDUSTRY_KEYWORDS = [
-      'KYC', 'AML', 'UPI', 'BBPS', 'NACH', 'NPCI', 'RuPay', 'Visa',
-      'FASTag', 'Wallet', 'Excel', 'Power BI', 'RBI', 
+      'KYC', 'UPI', 'BBPS', 'NACH', 'NPCI', 'RuPay', 'Visa',
+      'Wallet', 'Excel', 'Power BI', 'RBI', 
 	  'FinTech'
     ];
 
