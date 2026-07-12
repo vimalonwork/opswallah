@@ -1752,12 +1752,3 @@ body.wa-no-scroll {
     right: 3%;
   }
 }
-
-@media (max-width: 700px) {
-  .hero-img {
-    width: 100%;
-    max-width: 320px;
-    height: auto;
-    object-fit: contain;
-  }
-}
