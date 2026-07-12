@@ -506,14 +506,14 @@ img { max-width: 100%; display: block; }
 .industry-card {
   width: 100%;
   max-width: 380px;
-  max-height: 400px;
+  max-height: 330px;
   overflow: hidden;
   background:
     linear-gradient(160deg, rgba(37, 99, 235, 0.05), rgba(245, 158, 11, 0.03)),
     var(--color-white);
   border: 1px solid var(--color-border);
   border-radius: var(--radius-lg);
-  padding: 28px 28px 24px;
+  padding: 22px 24px 18px;
   box-shadow: var(--shadow-lg);
   text-align: center;
 }
@@ -536,7 +536,14 @@ img { max-width: 100%; display: block; }
 
 .industry-heading {
   font-size: 17px;
-  margin-bottom: 18px;
+  margin-bottom: 4px;
+}
+
+.industry-sub {
+  font-size: 12.5px;
+  line-height: 1.4;
+  color: var(--color-body);
+  margin-bottom: 14px;
 }
 
 /* Bounded "stage" where pills quietly appear/fade — fixed height, overflow
@@ -546,11 +553,11 @@ img { max-width: 100%; display: block; }
    400px cap. Mobile shrinks this further — see the max-width:700px block. */
 .industry-stage {
   position: relative;
-  height: 240px;
+  height: 180px;
   overflow: hidden;
   border-radius: calc(var(--radius-lg) - 6px);
   background: linear-gradient(180deg, rgba(37, 99, 235, 0.035), rgba(255, 255, 255, 0));
-  margin-bottom: 18px;
+  margin-bottom: 14px;
 }
 
 /* Premium text-only pills — no logos, no brand icons, no product marks.
@@ -624,21 +631,22 @@ img { max-width: 100%; display: block; }
 .industry-link {
   display: inline-flex;
   align-items: center;
-  gap: 6px;
+  gap: 5px;
   font-family: var(--font-heading);
-  font-weight: 600;
-  font-size: 13.5px;
-  color: var(--color-primary);
+  font-weight: 500;
+  font-size: 12px;
+  color: var(--color-body);
+  opacity: 0.85;
   border-top: 1px dashed var(--color-border);
-  padding-top: 14px;
+  padding-top: 10px;
   width: 100%;
   justify-content: center;
-  transition: gap 0.15s ease;
+  transition: gap 0.15s ease, opacity 0.15s ease;
 }
 
-.industry-link i { width: 15px; height: 15px; }
+.industry-link i { width: 13px; height: 13px; }
 
-.industry-link:hover { gap: 9px; }
+.industry-link:hover { gap: 8px; opacity: 1; }
 
 @media (min-width: 960px) {
   /* 75% / 25% desktop hero ratio (3fr:1fr). The left column still clearly
@@ -647,7 +655,7 @@ img { max-width: 100%; display: block; }
      keyword pills to sit on one line, or wrap to two, without clipping
      or colliding with their neighbors. */
   .hero-inner { grid-template-columns: 3fr 1fr; gap: 36px; align-items: flex-start; }
-  .industry-card { max-width: 100%; padding: 28px 24px 22px; }
+  .industry-card { max-width: 100%; padding: 22px 24px 18px; }
 }
 
 /* Compact mobile preview: smaller card, shorter stage, smaller pills.
@@ -655,17 +663,18 @@ img { max-width: 100%; display: block; }
    never turns into a long vertical section or forces extra scrolling. */
 @media (max-width: 700px) {
   .industry-card {
-    max-height: 240px;
-    padding: 20px 18px 16px;
+    max-height: 192px;
+    padding: 16px 14px 12px;
   }
-  .industry-heading { font-size: 15px; margin-bottom: 12px; }
-  .industry-stage { height: 118px; margin-bottom: 12px; }
+  .industry-heading { font-size: 14px; margin-bottom: 3px; }
+  .industry-sub { font-size: 11px; margin-bottom: 8px; }
+  .industry-stage { height: 96px; margin-bottom: 8px; }
   .industry-chip {
     width: 46%;
     padding: 5px 9px;
     font-size: 10.5px;
   }
-  .industry-link { padding-top: 10px; font-size: 12.5px; }
+  .industry-link { padding-top: 8px; font-size: 11px; }
 }
 
 /* ==========================================================================
@@ -1822,8 +1831,8 @@ body.wa-no-scroll {
 
   .hero-visual {
     width: 100% !important;
-    height: 240px !important;
-    max-height: 240px !important;
+    height: 192px !important;
+    max-height: 192px !important;
     min-height: 0 !important;
     margin: 0 !important;
     overflow: hidden !important;
@@ -1832,43 +1841,50 @@ body.wa-no-scroll {
 
   #industryCard {
     width: 100% !important;
-    height: 240px !important;
-    max-height: 240px !important;
+    height: 192px !important;
+    max-height: 192px !important;
     min-height: 0 !important;
-    padding: 14px 14px 12px !important;
+    padding: 12px 12px 10px !important;
     margin: 0 !important;
     overflow: hidden !important;
     box-sizing: border-box !important;
   }
 
   #industryCard .industry-eyebrow {
-    margin-bottom: 4px !important;
-    font-size: 10px !important;
+    margin-bottom: 3px !important;
+    font-size: 9.5px !important;
   }
 
   #industryCard .industry-heading {
-    margin-bottom: 6px !important;
-    font-size: 14px !important;
+    margin-bottom: 3px !important;
+    font-size: 13px !important;
     line-height: 1.25 !important;
   }
 
+  #industryCard .industry-sub {
+    margin-bottom: 6px !important;
+    font-size: 10.5px !important;
+    line-height: 1.3 !important;
+  }
+
   #industryStage {
-    height: 118px !important;
-    min-height: 118px !important;
-    max-height: 118px !important;
+    height: 94px !important;
+    min-height: 94px !important;
+    max-height: 94px !important;
     margin-bottom: 6px !important;
     overflow: hidden !important;
   }
 
   #industryCard .industry-link {
-    height: 32px !important;
+    height: 26px !important;
     padding-top: 6px !important;
-    font-size: 12px !important;
+    font-size: 11px !important;
+    opacity: 0.85 !important;
   }
 
   #industryCard .industry-chip {
-    padding: 5px 8px !important;
-    font-size: 10px !important;
+    padding: 4px 7px !important;
+    font-size: 9.5px !important;
     line-height: 1.15 !important;
   }
 }

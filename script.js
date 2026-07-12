@@ -202,8 +202,8 @@ document.addEventListener('DOMContentLoaded', () => {
 
   // ---- "Inside Banking & FinTech" — compact rotating keyword pills ----
   // The full keyword vocabulary lives here in JS, but only a small "active
-  // subset" is ever rendered inside the fixed-height stage: 8 pills max on
-  // desktop, 4 max on mobile. Each visible pill fades in (~0.6-0.8s), holds
+  // subset" is ever rendered inside the fixed-height stage: 6 pills max on
+  // desktop, 3 max on mobile. Each visible pill fades in (~0.6-0.8s), holds
   // (~2-2.5s), fades out, then reappears at a different safe-zone slot with
   // a new keyword — so the stage height (and therefore the whole panel)
   // never grows, and no two visible pills can ever overlap.
@@ -214,12 +214,12 @@ document.addEventListener('DOMContentLoaded', () => {
     const mobileQuery = window.matchMedia('(max-width: 700px)');
 
     // Full keyword vocabulary — Banking & FinTech domain. Text pills only,
-    // nothing brand-specific.
+    // nothing brand-specific. Exactly 15 topics, matching the "Explore 15+
+    // Industry Topics" heading/CTA copy.
     const INDUSTRY_KEYWORDS = [
-      'Banking & FinTech', 'Corporate Culture', 'Excel', 'Power BI', 'UPI',
-      'BBPS', 'KYC', 'AML', 'NPCI', 'RBI', 'NACH', 'Wallet', 'Visa', 'RuPay',
-      'Debit Cards', 'Credit Cards', 'Prepaid Cards', 'Payment Gateway',
-      'Payment Aggregator', 'Cross-Border Payments'
+      'UPI', 'BBPS', 'KYC', 'AML', 'Cards', 'Visa', 'RuPay', 'NPCI', 'NACH',
+      'Payment Gateway', 'Payment Aggregator', 'Cross-Border Payments',
+      'Excel', 'Power BI', 'Corporate Culture'
     ];
 
     // Reuses the same accent palette already used elsewhere on the site
@@ -237,9 +237,9 @@ document.addEventListener('DOMContentLoaded', () => {
     // itself stays capped (8 desktop / 4 mobile) and never overlaps.
     const configureGrid = () => {
       if (isMobile) {
-        SLOT_COLS = 2; SLOT_ROWS = 3; POOL_SIZE = 4; chipWidthPct = 46; // max 3-4 visible
+        SLOT_COLS = 2; SLOT_ROWS = 2; POOL_SIZE = 3; chipWidthPct = 46; // max 3 visible
       } else {
-        SLOT_COLS = 2; SLOT_ROWS = 5; POOL_SIZE = 8; chipWidthPct = 44; // max 6-8 visible
+        SLOT_COLS = 2; SLOT_ROWS = 4; POOL_SIZE = 6; chipWidthPct = 44; // max 6 visible
       }
       TOTAL_SLOTS = SLOT_COLS * SLOT_ROWS;
       cellW = 100 / SLOT_COLS;
