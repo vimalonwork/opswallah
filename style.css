@@ -318,6 +318,48 @@ img { max-width: 100%; display: block; }
   min-height: 2.6em;
 }
 
+/* --- Headline highlight system (rotating hero slides) ---
+   Color-only emphasis: no glow, gradient, outline or text-shadow.
+   Font-weight matches the surrounding headline (already 700) so the
+   only visual change is hue — keeps it premium, not shouty. --- */
+.rotator-headline .hl-warm {
+  color: #F97316;
+  font-weight: 700;
+}
+
+.rotator-headline .hl-cool {
+  color: #60A5FA;
+  font-weight: 700;
+}
+
+/* Optional light variant, reserved for any future dark-background theme.
+   Not used by the current 6 themes (all light tints). */
+.rotator-headline .hl-light {
+  color: #F8FAFC;
+  font-weight: 700;
+}
+
+/* Subtitle emphasis: bold + high-contrast color on a single phrase only,
+   rest of the subtitle stays at its normal weight/color. */
+.rotator-sub .sub-emphasis {
+  font-weight: 700;
+  color: var(--color-primary-dark);
+}
+
+@media (max-width: 768px) {
+  .rotator-headline .hl-warm,
+  .rotator-headline .hl-cool,
+  .rotator-headline .hl-light {
+    /* keep highlighted phrases inline so manual <br> breaks in the
+       slide data remain the only line-break points on mobile */
+    display: inline;
+  }
+
+  .rotator-sub .sub-emphasis {
+    font-weight: 700;
+  }
+}
+
 /* --- Soft background hook behind the rotating headline ---
    Fixed height/width/padding/radius across every slide — only the
    background tint + accent color change, so nothing ever shifts the

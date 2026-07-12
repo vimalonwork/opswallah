@@ -86,38 +86,38 @@ document.addEventListener('DOMContentLoaded', () => {
     // every slide).
     const slides = [
       {
-        headline: 'Resume Bhej-Bhej Ke Thak Gaye?',
-        sub: 'Reply na aane ki wajah degree nahi — readiness ki kami hai.',
+        headline: 'Resume Bhej-Bhej Ke <span class="hl-warm">Thak Gaye?</span>',
+        sub: 'Reply na aane ki wajah degree nahi — <strong class="sub-emphasis">readiness ki kami</strong> hai.',
         tier: 'tier-md',
         theme: 'theme-blue'
       },
       {
-        headline: "'बस' Graduate Hoon?",
-        sub: 'Feeling stuck because you are not an Engineer or MBA?',
+        headline: '<span class="hl-warm">\'बस\' Graduate</span> Hoon?',
+        sub: 'Feeling stuck because you are not an <strong class="sub-emphasis">Engineer or MBA</strong>?',
         tier: 'tier-lg',
         theme: 'theme-purple'
       },
       {
-        headline: 'Excel Aata Hai...<br>Interview Calls Nahi?',
-        sub: 'Sirf tool janna kaafi nahi — industry samajh hi shortlist karwati hai.',
+        headline: '<span class="hl-cool">Excel Aata Hai...</span><br>Interview Calls Nahi?',
+        sub: 'Sirf tool jaanna kaafi nahi — <strong class="sub-emphasis">industry understanding</strong> profile ko stronger banati hai.',
         tier: 'tier-sm',
         theme: 'theme-teal'
       },
       {
-        headline: 'Engineer Ya MBA Nahi Ho?',
-        sub: 'FinTech aur Banking companies ko Operations samajhne wale log chahiye — degree ka tag nahi.',
+        headline: '<span class="hl-warm">Engineer</span> Ya <span class="hl-cool">MBA</span> Nahi Ho?',
+        sub: 'FinTech aur Banking companies ko <strong class="sub-emphasis">Operations samajhne wale log</strong> chahiye — sirf degree ka tag nahi.',
         tier: 'tier-md',
         theme: 'theme-amber'
       },
       {
-        headline: 'Degree Complete.<br>Direction Missing?',
-        sub: 'Sahi skill nahi — sahi direction ki kami hoti hai. Switch abhi bhi possible hai.',
+        headline: 'Degree Complete.<br><span class="hl-warm">Direction Missing?</span>',
+        sub: 'Problem hamesha skill ki nahi hoti — kabhi-kabhi <strong class="sub-emphasis">clear direction</strong> ki kami hoti hai.',
         tier: 'tier-sm',
         theme: 'theme-coral'
       },
       {
-        headline: 'Job Chahiye...<br>Industry Samajhte Ho?',
-        sub: 'Banking & FinTech ka practical gyaan hi aapko baaki candidates se alag banata hai.',
+        headline: 'Job Chahiye...<br><span class="hl-cool">Industry Samajhte Ho?</span>',
+        sub: 'Banking & FinTech ka <strong class="sub-emphasis">practical understanding</strong> aapko dusre candidates se alag dikhne mein madad karta hai.',
         tier: 'tier-sm',
         theme: 'theme-cyan'
       }
@@ -144,7 +144,7 @@ document.addEventListener('DOMContentLoaded', () => {
       const slide = slides[index];
 
       heroHeadline.innerHTML = slide.headline; // safe: static, author-controlled content only
-      heroSub.textContent = slide.sub;
+      heroSub.innerHTML = slide.sub; // safe: static, author-controlled content only
 
       heroHeadline.classList.remove('tier-lg', 'tier-md', 'tier-sm');
       heroHeadline.classList.add(slide.tier);
