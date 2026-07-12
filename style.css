@@ -506,6 +506,8 @@ img { max-width: 100%; display: block; }
 .industry-card {
   width: 100%;
   max-width: 380px;
+  max-height: 400px;
+  overflow: hidden;
   background:
     linear-gradient(160deg, rgba(37, 99, 235, 0.05), rgba(245, 158, 11, 0.03)),
     var(--color-white);
@@ -539,11 +541,12 @@ img { max-width: 100%; display: block; }
 
 /* Bounded "stage" where pills quietly appear/fade — fixed height, overflow
    hidden, so the effect is always contained and never affects surrounding
-   layout. Sized to comfortably hold a calm cluster of 12-15 pills across
-   a loose 2-column grid without crowding or overlapping. */
+   layout. Sized to hold only the active subset (6-8 pills desktop) inside
+   a 2-column safe-zone grid, keeping the whole .industry-card under its
+   400px cap. Mobile shrinks this further — see the max-width:700px block. */
 .industry-stage {
   position: relative;
-  height: 500px;
+  height: 240px;
   overflow: hidden;
   border-radius: calc(var(--radius-lg) - 6px);
   background: linear-gradient(180deg, rgba(37, 99, 235, 0.035), rgba(255, 255, 255, 0));
@@ -606,9 +609,8 @@ img { max-width: 100%; display: block; }
    drifts, slides, or floats across the stage. Calm and enterprise-grade. */
 @keyframes industryChipFade {
   0%   { opacity: 0; }
-  12%  { opacity: 1; }
-  62%  { opacity: 1; }
-  74%  { opacity: 0; }
+  18%  { opacity: 1; }
+  82%  { opacity: 1; }
   100% { opacity: 0; }
 }
 
@@ -646,6 +648,24 @@ img { max-width: 100%; display: block; }
      or colliding with their neighbors. */
   .hero-inner { grid-template-columns: 3fr 1fr; gap: 36px; align-items: flex-start; }
   .industry-card { max-width: 100%; padding: 28px 24px 22px; }
+}
+
+/* Compact mobile preview: smaller card, shorter stage, smaller pills.
+   Keeps the whole panel (including the CTA) inside a 240px cap so it
+   never turns into a long vertical section or forces extra scrolling. */
+@media (max-width: 700px) {
+  .industry-card {
+    max-height: 240px;
+    padding: 20px 18px 16px;
+  }
+  .industry-heading { font-size: 15px; margin-bottom: 12px; }
+  .industry-stage { height: 118px; margin-bottom: 12px; }
+  .industry-chip {
+    width: 46%;
+    padding: 5px 9px;
+    font-size: 10.5px;
+  }
+  .industry-link { padding-top: 10px; font-size: 12.5px; }
 }
 
 /* ==========================================================================
@@ -1764,7 +1784,7 @@ body.wa-no-scroll {
 
   .hero-visual {
     width: 100%;
-    height: 280px;
+    height: auto;
     overflow: visible;
     margin-top: 8px;
   }

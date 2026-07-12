@@ -200,44 +200,51 @@ document.addEventListener('DOMContentLoaded', () => {
     startAutoRotate();
   }
 
-  // ---- "Inside Banking & FinTech" — premium floating keyword pills ----
-  // No logos, no brand icons — every pill is plain text plus a small
-  // accent dot. A fixed pool of pills lives permanently in the stage;
-  // each pill runs its own independent fade loop (appear → stay → fade →
-  // disappear → reappear elsewhere), so roughly 10-12 of the 15 are
-  // visible at any moment without ever synchronizing or sliding around.
+  // ---- "Inside Banking & FinTech" — compact rotating keyword pills ----
+  // The full keyword vocabulary lives here in JS, but only a small "active
+  // subset" is ever rendered inside the fixed-height stage: 8 pills max on
+  // desktop, 4 max on mobile. Each visible pill fades in (~0.6-0.8s), holds
+  // (~2-2.5s), fades out, then reappears at a different safe-zone slot with
+  // a new keyword — so the stage height (and therefore the whole panel)
+  // never grows, and no two visible pills can ever overlap.
   const industryStage = document.getElementById('industryStage');
 
   if (industryStage) {
     const prefersReducedMotionStage = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    const mobileQuery = window.matchMedia('(max-width: 700px)');
 
-    // Keyword-only vocabulary — Claude's selection from the Banking &
-    // FinTech domain. Text pills only, nothing brand-specific.
+    // Full keyword vocabulary — Banking & FinTech domain. Text pills only,
+    // nothing brand-specific.
     const INDUSTRY_KEYWORDS = [
-      'KYC', 'UPI', 'BBPS', 'NACH', 'NPCI', 'RuPay', 'Visa',
-      'Wallet', 'Excel', 'Power BI', 'RBI', 
-	  'FinTech'
+      'Banking & FinTech', 'Corporate Culture', 'Excel', 'Power BI', 'UPI',
+      'BBPS', 'KYC', 'AML', 'NPCI', 'RBI', 'NACH', 'Wallet', 'Visa', 'RuPay',
+      'Debit Cards', 'Credit Cards', 'Prepaid Cards', 'Payment Gateway',
+      'Payment Aggregator', 'Cross-Border Payments'
     ];
 
     // Reuses the same accent palette already used elsewhere on the site
     // (hero-hook themes) so pill color stays on-brand — no new colors.
     const DOT_COLORS = ['#2563EB', '#8B5CF6', '#14B8A6', '#F59E0B', '#FB923C', '#06B6D4', '#10B981'];
 
-    const POOL_SIZE = 15; // within the 12-15 spec; ~10-12 visible on average
-    const usedKeywords = new Set();
+    let usedKeywords = new Set();
+    let occupiedSlots = new Set();
+    let SLOT_COLS, SLOT_ROWS, TOTAL_SLOTS, cellW, cellH, POOL_SIZE, chipWidthPct;
+    let isMobile = mobileQuery.matches;
 
-    // --- Non-overlapping slot grid ---
-    // A loose 2-column x 8-row grid (16 slots) inside the stage. Pills
-    // claim a free slot when they (re)appear and release it the moment
-    // they finish fading out, so two visible pills can never land on top
-    // of each other — the earlier free-random placement is what caused
-    // pills to collide/overlap.
-    const SLOT_COLS = 2;
-    const SLOT_ROWS = 8;
-    const TOTAL_SLOTS = SLOT_COLS * SLOT_ROWS;
-    const cellW = 100 / SLOT_COLS;
-    const cellH = 100 / SLOT_ROWS;
-    const occupiedSlots = new Set();
+    // --- Responsive safe-zone grid ---
+    // More slots than active pills, so a reappearing pill can land
+    // somewhere different from where it faded out, while the active count
+    // itself stays capped (8 desktop / 4 mobile) and never overlaps.
+    const configureGrid = () => {
+      if (isMobile) {
+        SLOT_COLS = 2; SLOT_ROWS = 3; POOL_SIZE = 4; chipWidthPct = 46; // max 3-4 visible
+      } else {
+        SLOT_COLS = 2; SLOT_ROWS = 5; POOL_SIZE = 8; chipWidthPct = 44; // max 6-8 visible
+      }
+      TOTAL_SLOTS = SLOT_COLS * SLOT_ROWS;
+      cellW = 100 / SLOT_COLS;
+      cellH = 100 / SLOT_ROWS;
+    };
 
     const claimSlot = () => {
       const free = [];
@@ -255,12 +262,12 @@ document.addEventListener('DOMContentLoaded', () => {
     const positionAtSlot = (chip, slot) => {
       const col = slot % SLOT_COLS;
       const row = Math.floor(slot / SLOT_COLS);
-      const jitterX = (Math.random() - 0.5) * 3; // small, stays within the 3% margin on each side of the 44%-wide pill
-      const jitterY = (Math.random() - 0.5) * (cellH * 0.25);
-      const left = col * cellW + (cellW - 44) / 2 + jitterX; // 44 matches .industry-chip width
-      const top = row * cellH + cellH * 0.22 + jitterY;
-      chip.style.left = Math.max(2, Math.min(98 - 44, left)) + '%';
-      chip.style.top = Math.max(1, Math.min(97, top)) + '%';
+      const jitterX = (Math.random() - 0.5) * 3;
+      const jitterY = (Math.random() - 0.5) * (cellH * 0.2);
+      const left = col * cellW + (cellW - chipWidthPct) / 2 + jitterX;
+      const top = row * cellH + cellH * 0.18 + jitterY;
+      chip.style.left = Math.max(2, Math.min(98 - chipWidthPct, left)) + '%';
+      chip.style.top = Math.max(1, Math.min(96, top)) + '%';
     };
 
     const pickKeyword = (excludeLabel) => {
@@ -269,7 +276,10 @@ document.addEventListener('DOMContentLoaded', () => {
       return pool[Math.floor(Math.random() * pool.length)];
     };
 
-    const randomDuration = () => (4.6 + Math.random() * 1).toFixed(2) + 's'; // 4.6–5.6s cycle
+    // 3.4–4.2s full cycle; paired with the 18%/82% keyframe split in CSS
+    // this gives a ~0.6-0.8s fade-in, ~2.2-2.7s visible hold, ~0.6-0.8s
+    // fade-out — a rotation cadence of roughly every 2.5-3.5s per pill.
+    const randomDuration = () => (3.4 + Math.random() * 0.8).toFixed(2) + 's';
     const randomDelay = (duration) => `-${(Math.random() * parseFloat(duration)).toFixed(2)}s`; // stagger start
     const randomDot = () => DOT_COLORS[Math.floor(Math.random() * DOT_COLORS.length)];
 
@@ -320,13 +330,34 @@ document.addEventListener('DOMContentLoaded', () => {
         });
       }
       // When reduced motion is on, CSS forces opacity:1 and disables the
-      // animation entirely, so the pool is simply shown as a calm static
-      // set of keywords — content stays accessible, only the motion is removed.
+      // animation entirely, so the active subset is simply shown as a calm
+      // static set of keywords — content stays accessible, motion removed.
 
       industryStage.appendChild(chip);
     };
 
-    for (let i = 0; i < POOL_SIZE; i++) buildChip();
+    const buildStage = () => {
+      industryStage.innerHTML = '';
+      usedKeywords = new Set();
+      occupiedSlots = new Set();
+      configureGrid();
+      for (let i = 0; i < POOL_SIZE; i++) buildChip();
+    };
+
+    buildStage();
+
+    // Rebuild only when crossing the mobile/desktop breakpoint, so a pool
+    // sized for 8 pills never lingers once the panel shrinks to mobile
+    // (and vice versa).
+    const handleBreakpointChange = (e) => {
+      isMobile = e.matches;
+      buildStage();
+    };
+    if (mobileQuery.addEventListener) {
+      mobileQuery.addEventListener('change', handleBreakpointChange);
+    } else if (mobileQuery.addListener) {
+      mobileQuery.addListener(handleBreakpointChange); // older Safari fallback
+    }
   }
 
   // ---- Scroll reveal for sections ----
