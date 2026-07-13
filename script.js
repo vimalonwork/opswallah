@@ -3,13 +3,40 @@
 // ==========================================================================
 
 // --------------------------------------------------------------------------
-// FUTURE CONFIGURATION — replace the two placeholder values below when the
-// real backend / payment integration is ready. Nothing else in this file
-// needs to change.
+// CONFIGURATION
+// 1) Replace formEndpoint with the live Google Apps Script Web App URL.
+//    It must end with /exec.
+// 2) Keep paymentUrl pointed to the live Razorpay ₹29 Payment Link.
+// Do not place any secret API keys in this frontend file.
 // --------------------------------------------------------------------------
 const OPSWALLAH_FORM_CONFIG = {
-  formEndpoint: 'YOUR_GOOGLE_APPS_SCRIPT_EXEC_URL',
+  formEndpoint: 'https://script.google.com/macros/s/AKfycbztswoF76W0qgMEzoYunSig21aVvXH-F5KJCd2Ma8xWEeZG8Qy6uq8Hc2cFEYAn_irK/exec',
   paymentUrl: 'https://rzp.io/rzp/opswallah-discovery-session',
+};
+
+const isConfiguredHttpUrl = (value) => {
+  if (!value || typeof value !== 'string') return false;
+
+  const normalized = value.trim();
+
+  if (
+    normalized.includes('YOUR_') ||
+    normalized.includes('REPLACE_WITH') ||
+    normalized.includes('PASTE_')
+  ) {
+    return false;
+  }
+
+  try {
+    const parsed = new URL(normalized);
+
+    return (
+      parsed.protocol === 'https:' ||
+      parsed.protocol === 'http:'
+    );
+  } catch {
+    return false;
+  }
 };
 
 document.addEventListener('DOMContentLoaded', () => {
@@ -609,22 +636,185 @@ document.addEventListener('DOMContentLoaded', () => {
     document.getElementById('dfLeadId').value=generateLeadId();
 
     form.addEventListener('submit', async (event) => {
-      event.preventDefault(); if(!validateStep(2)) return;
-      const endpointConfigured=OPSWALLAH_FORM_CONFIG.formEndpoint && !OPSWALLAH_FORM_CONFIG.formEndpoint.startsWith('REPLACE_WITH');
-      const paymentConfigured=OPSWALLAH_FORM_CONFIG.paymentUrl && !OPSWALLAH_FORM_CONFIG.paymentUrl.startsWith('REPLACE_WITH');
-      if(!endpointConfigured) { statusEl.textContent='Lead-storage endpoint is not configured yet. Add the Google Apps Script web-app URL in script.js.'; statusEl.className='discovery-form-status is-error'; return; }
-      document.getElementById('dfSubmittedAt').value=new Date().toISOString();
-      const fd=new FormData(form); const payload=Object.fromEntries(fd.entries()); payload.programInterest=fd.getAll('programInterest');
-      submitBtn.disabled=true; submitBtn.textContent='Submitting your details…'; statusEl.textContent='Saving your details securely…'; statusEl.className='discovery-form-status is-info';
-      try {
-        const response=await fetch(OPSWALLAH_FORM_CONFIG.formEndpoint,{method:'POST',headers:{'Content-Type':'text/plain;charset=utf-8'},body:JSON.stringify(payload)});
-        if(!response.ok) throw new Error('Submission failed');
-        sessionStorage.setItem('opswallahLead',JSON.stringify({leadId:payload.leadId,name:payload.fullName,email:payload.email,phone:payload.whatsappNumber,amount:'29'}));
-        form.hidden=true; successState.hidden=false; document.getElementById('successFirstName').textContent=(payload.fullName||'there').split(/\s+/)[0];
-        paymentBtn.href=paymentConfigured?OPSWALLAH_FORM_CONFIG.paymentUrl:'#'; if(!paymentConfigured){paymentBtn.setAttribute('aria-disabled','true');paymentBtn.addEventListener('click',e=>{e.preventDefault();alert('Payment link is not configured yet.');},{once:false});}
-        successState.focus(); if(window.lucide) lucide.createIcons();
-      } catch(e) { statusEl.textContent='We could not save your details. Please try again or contact us on WhatsApp.'; statusEl.className='discovery-form-status is-error'; submitBtn.disabled=false; submitBtn.innerHTML='Submit Details & Continue <i data-lucide="arrow-right"></i>'; if(window.lucide) lucide.createIcons(); }
-    });
+  event.preventDefault();
+
+  if (!validateStep(2)) return;
+
+  const endpointConfigured = isConfiguredHttpUrl(
+    OPSWALLAH_FORM_CONFIG.formEndpoint
+  );
+
+  const paymentConfigured = isConfiguredHttpUrl(
+    OPSWALLAH_FORM_CONFIG.paymentUrl
+  );
+
+  if (!endpointConfigured) {
+    statusEl.textContent =
+      'Lead-storage endpoint is not configured yet. Paste the Google Apps Script /exec URL in script.js.';
+
+    statusEl.className =
+      'discovery-form-status is-error';
+
+    return;
+  }
+
+  document.getElementById('dfSubmittedAt').value =
+    new Date().toISOString();
+
+  const formData = new FormData(form);
+
+  const payload =
+    Object.fromEntries(formData.entries());
+
+  payload.programInterest =
+    formData.getAll('programInterest');
+
+  /*
+   * Google Apps Script reads these values through e.parameter.
+   *
+   * URLSearchParams avoids the browser preflight request that can
+   * happen when application/json is posted to Apps Script.
+   */
+  const requestBody = new URLSearchParams();
+
+  Object.entries(payload).forEach(([key, value]) => {
+    requestBody.append(
+      key,
+      Array.isArray(value)
+        ? value.join(', ')
+        : String(value ?? '')
+    );
+  });
+
+  submitBtn.disabled = true;
+
+  submitBtn.textContent =
+    'Submitting your details…';
+
+  statusEl.textContent =
+    'Saving your details securely…';
+
+  statusEl.className =
+    'discovery-form-status is-info';
+
+  try {
+    const response = await fetch(
+      OPSWALLAH_FORM_CONFIG.formEndpoint.trim(),
+      {
+        method: 'POST',
+        body: requestBody
+      }
+    );
+
+    if (!response.ok) {
+      throw new Error(
+        `Submission failed with status ${response.status}.`
+      );
+    }
+
+    const responseText =
+      await response.text();
+
+    let result;
+
+    try {
+      result = JSON.parse(responseText);
+    } catch {
+      throw new Error(
+        'The lead receiver returned an invalid response.'
+      );
+    }
+
+    if (!result.success) {
+      throw new Error(
+        result.message ||
+        'Lead could not be saved.'
+      );
+    }
+
+    const confirmedLeadId =
+      result.leadId ||
+      payload.leadId ||
+      '';
+
+    sessionStorage.setItem(
+      'opswallahLead',
+      JSON.stringify({
+        leadId: confirmedLeadId,
+        name: payload.fullName || '',
+        email: payload.email || '',
+        phone: payload.whatsappNumber || '',
+        amount: '29'
+      })
+    );
+
+    form.hidden = true;
+    successState.hidden = false;
+
+    document
+      .getElementById('successFirstName')
+      .textContent =
+        (payload.fullName || 'there')
+          .trim()
+          .split(/\s+/)[0];
+
+    if (paymentConfigured) {
+      paymentBtn.href =
+        OPSWALLAH_FORM_CONFIG.paymentUrl.trim();
+
+      paymentBtn.removeAttribute(
+        'aria-disabled'
+      );
+    } else {
+      paymentBtn.href = '#';
+
+      paymentBtn.setAttribute(
+        'aria-disabled',
+        'true'
+      );
+
+      paymentBtn.addEventListener(
+        'click',
+        (clickEvent) => {
+          clickEvent.preventDefault();
+
+          statusEl.textContent =
+            'Your details are saved, but the ₹29 payment link is not configured yet.';
+
+          statusEl.className =
+            'discovery-form-status is-error';
+        }
+      );
+    }
+
+    successState.focus();
+
+    if (window.lucide) {
+      lucide.createIcons();
+    }
+  } catch (error) {
+    console.error(
+      'OpsWallah lead submission error:',
+      error
+    );
+
+    statusEl.textContent =
+      'We could not save your details. Please try again or contact us on WhatsApp.';
+
+    statusEl.className =
+      'discovery-form-status is-error';
+
+    submitBtn.disabled = false;
+
+    submitBtn.innerHTML =
+      'Submit Details & Continue <i data-lucide="arrow-right"></i>';
+
+    if (window.lucide) {
+      lucide.createIcons();
+    }
+  }
+});
+
     updateEducationFields(); showStep(0);
   }
 
