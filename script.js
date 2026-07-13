@@ -2,6 +2,16 @@
 // OpsWallah — Site Interactions
 // ==========================================================================
 
+// --------------------------------------------------------------------------
+// FUTURE CONFIGURATION — replace the two placeholder values below when the
+// real backend / payment integration is ready. Nothing else in this file
+// needs to change.
+// --------------------------------------------------------------------------
+const OPSWALLAH_FORM_CONFIG = {
+  formEndpoint: 'YOUR_GOOGLE_APPS_SCRIPT_EXEC_URL',
+  paymentUrl: 'https://rzp.io/rzp/opswallah-discovery-session',
+};
+
 document.addEventListener('DOMContentLoaded', () => {
 
   // ---- Lucide icons ----
@@ -494,4 +504,144 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   }
 
+  // ---- Booking CTAs: smooth scroll to Discovery Form ----
+  const bookingCtas = document.querySelectorAll('.js-booking-cta');
+  const discoveryCard = document.querySelector('.discovery-card');
+  const discoveryFormSection = document.getElementById('discovery-form');
+  let highlightTimer = null;
+  bookingCtas.forEach((cta) => cta.addEventListener('click', (event) => {
+    event.preventDefault();
+    if (!discoveryFormSection) return;
+    discoveryFormSection.scrollIntoView({ behavior: window.matchMedia('(prefers-reduced-motion: reduce)').matches ? 'auto' : 'smooth', block: 'start' });
+    if (discoveryCard) {
+      clearTimeout(highlightTimer);
+      discoveryCard.classList.add('is-highlighted');
+      highlightTimer = setTimeout(() => discoveryCard.classList.remove('is-highlighted'), 1200);
+    }
+  }));
+
+  // ---- Three-step Discovery Session form ----
+  const form = document.getElementById('discoveryForm');
+  if (form) {
+    const steps = [...form.querySelectorAll('.form-step')];
+    const nextBtn = document.getElementById('formNextBtn');
+    const backBtn = document.getElementById('formBackBtn');
+    const submitBtn = document.getElementById('discoverySubmitBtn');
+    const statusEl = document.getElementById('discoveryFormStatus');
+    const fill = document.getElementById('formProgressFill');
+    const stepLabel = document.getElementById('formStepLabel');
+    const stepName = document.getElementById('formStepName');
+    const education = document.getElementById('dfEducationStatus');
+    const stream = document.getElementById('dfStream');
+    const source = document.getElementById('dfSource');
+    const successState = document.getElementById('formSuccessState');
+    const paymentBtn = document.getElementById('paymentContinueBtn');
+    let currentStep = 0;
+
+    const stepNames = ['Personal Details', 'Education & Career Profile', 'Program Interest & Consent'];
+    const ids = (list) => list.map(id => document.getElementById(id)).filter(Boolean);
+    const conditional = {
+      current: document.getElementById('currentYearWrap'), expected: document.getElementById('expectedYearWrap'),
+      graduation: document.getElementById('graduationYearWrap'), stream: document.getElementById('streamWrap'),
+      otherStream: document.getElementById('otherStreamWrap'), otherEducation: document.getElementById('otherEducationWrap')
+    };
+    const setRequired = (wrap, required) => { if (!wrap) return; wrap.hidden = !required; wrap.querySelectorAll('input,select').forEach(el => { el.required = required; if (!required) { el.value=''; clearError(el); } }); };
+    function clearError(el) { const wrap=el?.closest('.form-field, .choice-group, .consent-card'); if (wrap) wrap.classList.remove('has-error'); const err=document.getElementById(el?.id+'Error'); if(err) err.textContent=''; }
+    function setError(el, message) { const wrap=el.closest('.form-field, .choice-group, .consent-card'); if(wrap) wrap.classList.add('has-error'); const err=document.getElementById(el.id+'Error'); if(err) err.textContent=message; }
+    function updateEducationFields() {
+      const v=education.value;
+      setRequired(conditional.current, v==='pursuing-graduation');
+      setRequired(conditional.expected, v==='pursuing-graduation');
+      setRequired(conditional.graduation, ['graduate','pursuing-postgraduation','postgraduate','doctorate'].includes(v));
+      setRequired(conditional.stream, ['pursuing-graduation','graduate','pursuing-postgraduation','postgraduate','doctorate'].includes(v));
+      setRequired(conditional.otherEducation, v==='other');
+      setRequired(conditional.otherStream, !conditional.stream.hidden && stream.value==='Other');
+    }
+    education.addEventListener('change', updateEducationFields);
+    stream.addEventListener('change', updateEducationFields);
+    source.addEventListener('change', () => setRequired(document.getElementById('otherSourceWrap'), source.value==='Other'));
+    form.querySelectorAll('input[name="careerChallenge"]').forEach(r => r.addEventListener('change', () => setRequired(document.getElementById('otherChallengeWrap'), r.value==='Other' && r.checked)));
+    form.querySelectorAll('input[name="programInterest"]').forEach(cb => cb.addEventListener('change', () => {
+      const all=[...form.querySelectorAll('input[name="programInterest"]')];
+      if (cb.dataset.exclusive==='true' && cb.checked) all.filter(x=>x!==cb).forEach(x=>x.checked=false);
+      else if(cb.checked) all.filter(x=>x.dataset.exclusive==='true').forEach(x=>x.checked=false);
+      document.getElementById('programInterestError').textContent='';
+    }));
+    form.querySelectorAll('.language-toggle').forEach(btn => btn.addEventListener('click', () => { const target=document.getElementById(btn.dataset.target); const open=btn.getAttribute('aria-expanded')==='true'; btn.setAttribute('aria-expanded', String(!open)); target.hidden=open; }));
+
+    function validateElement(el) {
+      clearError(el);
+      if (el.hidden || el.closest('[hidden]')) return true;
+      if (el.type==='checkbox' && el.required && !el.checked) { setError(el, 'Please accept this statement to continue.'); return false; }
+      const value=(el.value||'').trim();
+      if (el.required && !value) { setError(el, 'This field is required.'); return false; }
+      if (el.type==='email' && value && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value)) { setError(el, 'Please enter a valid email address.'); return false; }
+      if (el.id==='dfWhatsapp' && value) { const d=value.replace(/\D/g,'').replace(/^91(?=\d{10}$)/,''); if(!/^[6-9]\d{9}$/.test(d)) { setError(el,'Please enter a valid 10-digit Indian mobile number.'); return false; } el.value=d; }
+      return true;
+    }
+    function validateStep(index) {
+      let ok=true;
+      steps[index].querySelectorAll('input[required],select[required]').forEach(el => { if(!validateElement(el)) ok=false; });
+      if(index===2) {
+        if(!form.querySelector('input[name="programInterest"]:checked')) { document.getElementById('programInterestGroup').classList.add('has-error'); document.getElementById('programInterestError').textContent='Please select at least one program.'; ok=false; }
+        if(!form.querySelector('input[name="careerChallenge"]:checked')) { document.getElementById('careerChallengeGroup').classList.add('has-error'); document.getElementById('careerChallengeError').textContent='Please select your biggest career challenge.'; ok=false; }
+      }
+      if(!ok) { statusEl.textContent='Please complete the highlighted fields.'; statusEl.className='discovery-form-status is-error'; const first=steps[index].querySelector('.has-error input, .has-error select'); first?.focus(); }
+      else { statusEl.textContent=''; statusEl.className='discovery-form-status'; }
+      return ok;
+    }
+    function showStep(index) {
+      currentStep=index;
+      steps.forEach((s,i)=>{s.hidden=i!==index;s.classList.toggle('is-active',i===index)});
+      fill.style.width=((index+1)/steps.length*100)+'%'; stepLabel.textContent=`Step ${index+1} of ${steps.length}`; stepName.textContent=stepNames[index];
+      backBtn.hidden=index===0; nextBtn.hidden=index===steps.length-1; submitBtn.hidden=index!==steps.length-1;
+      steps[index].querySelector('input,select')?.focus({preventScroll:true});
+    }
+    nextBtn.addEventListener('click',()=>{ if(validateStep(currentStep)) showStep(currentStep+1); });
+    backBtn.addEventListener('click',()=>showStep(Math.max(0,currentStep-1)));
+    form.querySelectorAll('input,select').forEach(el=>{ el.addEventListener('blur',()=>{ if(el.required) validateElement(el); }); el.addEventListener('input',()=>clearError(el)); el.addEventListener('change',()=>clearError(el)); });
+
+    const params=new URLSearchParams(location.search);
+    const tracking={dfUtmSource:'utm_source',dfUtmMedium:'utm_medium',dfUtmCampaign:'utm_campaign',dfCampaign:'campaign'};
+    Object.entries(tracking).forEach(([id,key])=>{document.getElementById(id).value=params.get(key)||''});
+    document.getElementById('dfLandingPage').value=location.href;
+    const generateLeadId=()=>`OW-${new Date().toISOString().slice(0,10).replaceAll('-','')}-${Math.random().toString(36).slice(2,7).toUpperCase()}`;
+    document.getElementById('dfLeadId').value=generateLeadId();
+
+    form.addEventListener('submit', async (event) => {
+      event.preventDefault(); if(!validateStep(2)) return;
+      const endpointConfigured=OPSWALLAH_FORM_CONFIG.formEndpoint && !OPSWALLAH_FORM_CONFIG.formEndpoint.startsWith('REPLACE_WITH');
+      const paymentConfigured=OPSWALLAH_FORM_CONFIG.paymentUrl && !OPSWALLAH_FORM_CONFIG.paymentUrl.startsWith('REPLACE_WITH');
+      if(!endpointConfigured) { statusEl.textContent='Lead-storage endpoint is not configured yet. Add the Google Apps Script web-app URL in script.js.'; statusEl.className='discovery-form-status is-error'; return; }
+      document.getElementById('dfSubmittedAt').value=new Date().toISOString();
+      const fd=new FormData(form); const payload=Object.fromEntries(fd.entries()); payload.programInterest=fd.getAll('programInterest');
+      submitBtn.disabled=true; submitBtn.textContent='Submitting your details…'; statusEl.textContent='Saving your details securely…'; statusEl.className='discovery-form-status is-info';
+      try {
+        const response=await fetch(OPSWALLAH_FORM_CONFIG.formEndpoint,{method:'POST',headers:{'Content-Type':'text/plain;charset=utf-8'},body:JSON.stringify(payload)});
+        if(!response.ok) throw new Error('Submission failed');
+        sessionStorage.setItem('opswallahLead',JSON.stringify({leadId:payload.leadId,name:payload.fullName,email:payload.email,phone:payload.whatsappNumber,amount:'29'}));
+        form.hidden=true; successState.hidden=false; document.getElementById('successFirstName').textContent=(payload.fullName||'there').split(/\s+/)[0];
+        paymentBtn.href=paymentConfigured?OPSWALLAH_FORM_CONFIG.paymentUrl:'#'; if(!paymentConfigured){paymentBtn.setAttribute('aria-disabled','true');paymentBtn.addEventListener('click',e=>{e.preventDefault();alert('Payment link is not configured yet.');},{once:false});}
+        successState.focus(); if(window.lucide) lucide.createIcons();
+      } catch(e) { statusEl.textContent='We could not save your details. Please try again or contact us on WhatsApp.'; statusEl.className='discovery-form-status is-error'; submitBtn.disabled=false; submitBtn.innerHTML='Submit Details & Continue <i data-lucide="arrow-right"></i>'; if(window.lucide) lucide.createIcons(); }
+    });
+    updateEducationFields(); showStep(0);
+  }
+
+  // ---- Official Domain Verification popup ----
+  const domainModalOverlay = document.getElementById('domainModalOverlay');
+  const domainModal = document.getElementById('domainModal');
+  const domainModalClose = document.getElementById('domainModalClose');
+  const domainModalContinue = document.getElementById('domainModalContinue');
+  const domainModalReopen = document.getElementById('domainModalReopen');
+  if (domainModalOverlay && domainModal && domainModalClose && domainModalContinue) {
+    const STORAGE_KEY='opswallah_domain_ack'; const RECHECK_MS=30*24*60*60*1000; const CLOSE_MS=320; let lastFocused=null;
+    const shouldShow=()=>{try{const t=parseInt(localStorage.getItem(STORAGE_KEY),10);return !t||Date.now()-t>RECHECK_MS}catch{return true}};
+    const focusables=()=>[...domainModal.querySelectorAll('a[href],button:not([disabled])')];
+    const keydown=(e)=>{if(e.key==='Escape'){e.preventDefault();close()} if(e.key==='Tab'){const f=focusables();if(!f.length)return; if(e.shiftKey&&document.activeElement===f[0]){e.preventDefault();f.at(-1).focus()}else if(!e.shiftKey&&document.activeElement===f.at(-1)){e.preventDefault();f[0].focus()}}};
+    function open(){lastFocused=document.activeElement;domainModalOverlay.hidden=false;document.body.classList.add('domain-no-scroll');requestAnimationFrame(()=>domainModalOverlay.classList.add('is-open'));domainModalClose.focus();document.addEventListener('keydown',keydown)}
+    function close(){try{localStorage.setItem(STORAGE_KEY,String(Date.now()))}catch{} domainModalOverlay.classList.remove('is-open');document.removeEventListener('keydown',keydown);setTimeout(()=>{domainModalOverlay.hidden=true;document.body.classList.remove('domain-no-scroll');lastFocused?.focus?.()},CLOSE_MS)}
+    domainModalClose.addEventListener('click',close);domainModalContinue.addEventListener('click',close);domainModalOverlay.addEventListener('click',e=>{if(e.target===domainModalOverlay)close()});domainModalReopen?.addEventListener('click',open);
+    if(shouldShow()) setTimeout(open,400);
+  }
 });
