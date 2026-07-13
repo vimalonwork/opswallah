@@ -569,16 +569,19 @@ document.addEventListener('DOMContentLoaded', () => {
     const ids = (list) => list.map(id => document.getElementById(id)).filter(Boolean);
     const conditional = {
       current: document.getElementById('currentYearWrap'), expected: document.getElementById('expectedYearWrap'),
+      expectedPG: document.getElementById('expectedPGYearWrap'),
       graduation: document.getElementById('graduationYearWrap'), stream: document.getElementById('streamWrap'),
       otherStream: document.getElementById('otherStreamWrap'), otherEducation: document.getElementById('otherEducationWrap')
     };
     const setRequired = (wrap, required) => { if (!wrap) return; wrap.hidden = !required; wrap.querySelectorAll('input,select').forEach(el => { el.required = required; if (!required) { el.value=''; clearError(el); } }); };
+    const setVisibleOptional = (wrap, visible) => { if (!wrap) return; wrap.hidden = !visible; wrap.querySelectorAll('input,select').forEach(el => { el.required = false; if (!visible) { el.value=''; clearError(el); } }); };
     function clearError(el) { const wrap=el?.closest('.form-field, .choice-group, .consent-card'); if (wrap) wrap.classList.remove('has-error'); const err=document.getElementById(el?.id+'Error'); if(err) err.textContent=''; }
     function setError(el, message) { const wrap=el.closest('.form-field, .choice-group, .consent-card'); if(wrap) wrap.classList.add('has-error'); const err=document.getElementById(el.id+'Error'); if(err) err.textContent=message; }
     function updateEducationFields() {
       const v=education.value;
       setRequired(conditional.current, v==='pursuing-graduation');
       setRequired(conditional.expected, v==='pursuing-graduation');
+      setVisibleOptional(conditional.expectedPG, v==='pursuing-postgraduation');
       setRequired(conditional.graduation, ['graduate','pursuing-postgraduation','postgraduate','doctorate'].includes(v));
       setRequired(conditional.stream, ['pursuing-graduation','graduate','pursuing-postgraduation','postgraduate','doctorate'].includes(v));
       setRequired(conditional.otherEducation, v==='other');
