@@ -572,6 +572,7 @@ document.addEventListener('DOMContentLoaded', () => {
       graduation: document.getElementById('graduationYearWrap'), stream: document.getElementById('streamWrap'),
       otherStream: document.getElementById('otherStreamWrap')
     };
+    const eduBranch = document.getElementById('eduBranch');
     const setRequired = (wrap, required) => { if (!wrap) return; wrap.hidden = !required; wrap.querySelectorAll('input,select').forEach(el => { el.required = required; if (!required) { el.value=''; clearError(el); } }); };
     function clearError(el) { const wrap=el?.closest('.form-field, .choice-group, .consent-card'); if (wrap) wrap.classList.remove('has-error'); const err=document.getElementById(el?.id+'Error'); if(err) err.textContent=''; }
     function setError(el, message) { const wrap=el.closest('.form-field, .choice-group, .consent-card'); if(wrap) wrap.classList.add('has-error'); const err=document.getElementById(el.id+'Error'); if(err) err.textContent=message; }
@@ -582,6 +583,7 @@ document.addEventListener('DOMContentLoaded', () => {
       setRequired(conditional.graduation, ['graduate','pursuing-postgraduation','postgraduate','doctorate'].includes(v));
       setRequired(conditional.stream, v!=='' && v!=='high-school');
       setRequired(conditional.otherStream, !conditional.stream.hidden && stream.value==='Other');
+      if (eduBranch) eduBranch.classList.toggle('is-open', v!=='' && v!=='high-school');
     }
     education.addEventListener('change', updateEducationFields);
     stream.addEventListener('change', updateEducationFields);
