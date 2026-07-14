@@ -568,22 +568,13 @@ document.addEventListener('DOMContentLoaded', () => {
     const stepNames = ['Personal Details', 'Education & Career Profile', 'Program Interest & Consent'];
     const ids = (list) => list.map(id => document.getElementById(id)).filter(Boolean);
     const conditional = {
-      current: document.getElementById('currentYearWrap'), expected: document.getElementById('expectedYearWrap'),
-      graduation: document.getElementById('graduationYearWrap'), stream: document.getElementById('streamWrap'),
       otherStream: document.getElementById('otherStreamWrap')
     };
-    const eduBranch = document.getElementById('eduBranch');
     const setRequired = (wrap, required) => { if (!wrap) return; wrap.hidden = !required; wrap.querySelectorAll('input,select').forEach(el => { el.required = required; if (!required) { el.value=''; clearError(el); } }); };
     function clearError(el) { const wrap=el?.closest('.form-field, .choice-group, .consent-card'); if (wrap) wrap.classList.remove('has-error'); const err=document.getElementById(el?.id+'Error'); if(err) err.textContent=''; }
     function setError(el, message) { const wrap=el.closest('.form-field, .choice-group, .consent-card'); if(wrap) wrap.classList.add('has-error'); const err=document.getElementById(el.id+'Error'); if(err) err.textContent=message; }
     function updateEducationFields() {
-      const v=education.value;
-      setRequired(conditional.current, v==='pursuing-graduation');
-      setRequired(conditional.expected, v==='pursuing-graduation');
-      setRequired(conditional.graduation, ['graduate','pursuing-postgraduation','postgraduate','doctorate'].includes(v));
-      setRequired(conditional.stream, v!=='' && v!=='high-school');
-      setRequired(conditional.otherStream, !conditional.stream.hidden && stream.value==='Other');
-      if (eduBranch) eduBranch.classList.toggle('is-open', v!=='' && v!=='high-school');
+      setRequired(conditional.otherStream, stream.value==='Other');
     }
     education.addEventListener('change', updateEducationFields);
     stream.addEventListener('change', updateEducationFields);
