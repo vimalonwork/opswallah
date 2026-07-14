@@ -555,6 +555,7 @@ document.addEventListener('DOMContentLoaded', () => {
     // deliberately lives outside the <form> and is excluded here so it can
     // never be counted as a "step" or affect step math.
     const steps = [...form.querySelectorAll('.form-step:not(.form-success-state)')];
+    const totalSteps = steps.length; // 3 real data-collection steps only
     const formProgress = document.querySelector('.form-progress');
     const nextBtn = document.getElementById('formNextBtn');
     const backBtn = document.getElementById('formBackBtn');
@@ -614,15 +615,34 @@ document.addEventListener('DOMContentLoaded', () => {
       else { statusEl.textContent=''; statusEl.className='discovery-form-status'; }
       return ok;
     }
+
     function showStep(index) {
+      // Defensive clamp: showStep can never be asked to render a step
+      // outside the real 0..totalSteps-1 range, so "Step 4 of 3" can't
+      // be produced even by a future/indirect caller.
+      index = Math.max(0, Math.min(index, totalSteps - 1));
       currentStep=index;
       if (formProgress) formProgress.hidden = false;
       steps.forEach((s,i)=>{s.hidden=i!==index;s.classList.toggle('is-active',i===index)});
-      fill.style.width=((index+1)/steps.length*100)+'%'; stepLabel.textContent=`Step ${index+1} of ${steps.length}`; stepName.textContent=stepNames[index];
-      backBtn.hidden=index===0; nextBtn.hidden=index===steps.length-1; submitBtn.hidden=index!==steps.length-1;
+      fill.style.width=((index+1)/totalSteps*100)+'%'; stepLabel.textContent=`Step ${index+1} of ${totalSteps}`; stepName.textContent=stepNames[index];
+
+      const isFinalStep = index === totalSteps - 1;
+      backBtn.hidden = index === 0;
+      nextBtn.hidden = isFinalStep;      // Continue is fully hidden on Step 3
+      submitBtn.hidden = !isFinalStep;   // Submit only appears on Step 3
       steps[index].querySelector('input,select')?.focus({preventScroll:true});
     }
-    nextBtn.addEventListener('click',()=>{ if(validateStep(currentStep)) showStep(currentStep+1); });
+    nextBtn.addEventListener('click', () => {
+      if (!validateStep(currentStep)) return;
+      // Strict guard: Continue can only ever move within the real
+      // data-collection steps. It must never reach/create a Step 4, and
+      // it must never be the thing that reveals the confirmation screen
+      // — that only happens after a successful form submit.
+      if (currentStep < totalSteps - 1) {
+        currentStep++;
+        showStep(currentStep);
+      }
+    });
     backBtn.addEventListener('click',()=>showStep(Math.max(0,currentStep-1)));
     form.querySelectorAll('input,select').forEach(el=>{ el.addEventListener('blur',()=>{ if(el.required) validateElement(el); }); el.addEventListener('input',()=>clearError(el)); el.addEventListener('change',()=>clearError(el)); });
 

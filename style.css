@@ -122,6 +122,14 @@ img { max-width: 100%; display: block; }
   white-space: nowrap;
 }
 
+/* .btn's display:inline-flex has the same specificity as the browser's
+   built-in [hidden]{display:none} rule, so it silently wins and any
+   .btn given the `hidden` attribute (e.g. Continue/Submit/Back on the
+   Discovery form) stayed visible and clickable. Force it back off. */
+.btn[hidden] {
+  display: none;
+}
+
 .btn-primary {
   background: var(--color-primary);
   color: var(--color-white);
