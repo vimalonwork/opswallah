@@ -550,7 +550,12 @@ document.addEventListener('DOMContentLoaded', () => {
   // ---- Three-step Discovery Session form ----
   const form = document.getElementById('discoveryForm');
   if (form) {
-    const steps = [...form.querySelectorAll('.form-step')];
+    // IMPORTANT: only the three real data-collection sections use
+    // `.form-step`. The confirmation/payment screen (`.form-success-state`)
+    // deliberately lives outside the <form> and is excluded here so it can
+    // never be counted as a "step" or affect step math.
+    const steps = [...form.querySelectorAll('.form-step:not(.form-success-state)')];
+    const formProgress = document.querySelector('.form-progress');
     const nextBtn = document.getElementById('formNextBtn');
     const backBtn = document.getElementById('formBackBtn');
     const submitBtn = document.getElementById('discoverySubmitBtn');
@@ -611,6 +616,7 @@ document.addEventListener('DOMContentLoaded', () => {
     }
     function showStep(index) {
       currentStep=index;
+      if (formProgress) formProgress.hidden = false;
       steps.forEach((s,i)=>{s.hidden=i!==index;s.classList.toggle('is-active',i===index)});
       fill.style.width=((index+1)/steps.length*100)+'%'; stepLabel.textContent=`Step ${index+1} of ${steps.length}`; stepName.textContent=stepNames[index];
       backBtn.hidden=index===0; nextBtn.hidden=index===steps.length-1; submitBtn.hidden=index!==steps.length-1;
@@ -742,6 +748,11 @@ document.addEventListener('DOMContentLoaded', () => {
 
     form.hidden = true;
     successState.hidden = false;
+
+    // The success/payment screen is not one of the formSteps — completely
+    // hide "Step X of 3" and the progress bar rather than advancing
+    // currentStep to a non-existent 4th step.
+    if (formProgress) formProgress.hidden = true;
 
     document
       .getElementById('successFirstName')
