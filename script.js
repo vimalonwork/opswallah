@@ -547,56 +547,28 @@ document.addEventListener('DOMContentLoaded', () => {
     }
   }));
 
-  // ---- Three-step Discovery Session form ----
+  // ---- Single-step Discovery Session form ----
+  // Only Name / WhatsApp / Email / Consent / Acknowledgement are collected
+  // here, at the moment of payment. Everything else (education, program
+  // interest, career challenge, lead source) is collected AFTER payment
+  // via a separate Google Form, linked back to this Lead ID.
   const form = document.getElementById('discoveryForm');
   if (form) {
-    // IMPORTANT: only the three real data-collection sections use
-    // `.form-step`. The confirmation/payment screen (`.form-success-state`)
-    // deliberately lives outside the <form> and is excluded here so it can
-    // never be counted as a "step" or affect step math.
-    const steps = [...form.querySelectorAll('.form-step:not(.form-success-state)')];
-    const totalSteps = steps.length; // 3 real data-collection steps only
-    const formProgress = document.querySelector('.form-progress');
-    const nextBtn = document.getElementById('formNextBtn');
-    const backBtn = document.getElementById('formBackBtn');
     const submitBtn = document.getElementById('discoverySubmitBtn');
     const statusEl = document.getElementById('discoveryFormStatus');
-    const fill = document.getElementById('formProgressFill');
-    const stepLabel = document.getElementById('formStepLabel');
-    const stepName = document.getElementById('formStepName');
-    const education = document.getElementById('dfEducationStatus');
-    const stream = document.getElementById('dfStream');
-    const source = document.getElementById('dfSource');
     const successState = document.getElementById('formSuccessState');
     const paymentBtn = document.getElementById('paymentContinueBtn');
-    let currentStep = 0;
 
-    const stepNames = ['Personal Details', 'Education & Career Profile', 'Program Interest & Consent'];
-    const ids = (list) => list.map(id => document.getElementById(id)).filter(Boolean);
-    const conditional = {
-      otherStream: document.getElementById('otherStreamWrap')
-    };
-    const setRequired = (wrap, required) => { if (!wrap) return; wrap.hidden = !required; wrap.querySelectorAll('input,select').forEach(el => { el.required = required; if (!required) { el.value=''; clearError(el); } }); };
-    function clearError(el) { const wrap=el?.closest('.form-field, .choice-group, .consent-card'); if (wrap) wrap.classList.remove('has-error'); const err=document.getElementById(el?.id+'Error'); if(err) err.textContent=''; }
-    function setError(el, message) { const wrap=el.closest('.form-field, .choice-group, .consent-card'); if(wrap) wrap.classList.add('has-error'); const err=document.getElementById(el.id+'Error'); if(err) err.textContent=message; }
-    function updateEducationFields() {
-      setRequired(conditional.otherStream, stream.value==='Other');
-    }
-    education.addEventListener('change', updateEducationFields);
-    stream.addEventListener('change', updateEducationFields);
-    source.addEventListener('change', () => setRequired(document.getElementById('otherSourceWrap'), source.value==='Other'));
-    form.querySelectorAll('input[name="careerChallenge"]').forEach(r => r.addEventListener('change', () => setRequired(document.getElementById('otherChallengeWrap'), r.value==='Other' && r.checked)));
-    form.querySelectorAll('input[name="programInterest"]').forEach(cb => cb.addEventListener('change', () => {
-      const all=[...form.querySelectorAll('input[name="programInterest"]')];
-      if (cb.dataset.exclusive==='true' && cb.checked) all.filter(x=>x!==cb).forEach(x=>x.checked=false);
-      else if(cb.checked) all.filter(x=>x.dataset.exclusive==='true').forEach(x=>x.checked=false);
-      document.getElementById('programInterestError').textContent='';
-    }));
-    form.querySelectorAll('.language-toggle').forEach(btn => btn.addEventListener('click', () => { const target=document.getElementById(btn.dataset.target); const open=btn.getAttribute('aria-expanded')==='true'; btn.setAttribute('aria-expanded', String(!open)); target.hidden=open; }));
+    // Only becomes true after the person has attempted to submit.
+    // Prevents "This field is required" from appearing just because
+    // someone tabbed through fields without typing anything yet.
+    let attemptedSubmit = false;
+
+    function clearError(el) { const wrap=el?.closest('.form-field, .consent-card'); if (wrap) wrap.classList.remove('has-error'); const err=document.getElementById(el?.id+'Error'); if(err) err.textContent=''; }
+    function setError(el, message) { const wrap=el.closest('.form-field, .consent-card'); if(wrap) wrap.classList.add('has-error'); const err=document.getElementById(el.id+'Error'); if(err) err.textContent=message; }
 
     function validateElement(el) {
       clearError(el);
-      if (el.hidden || el.closest('[hidden]')) return true;
       if (el.type==='checkbox' && el.required && !el.checked) { setError(el, 'Please accept this statement to continue.'); return false; }
       const value=(el.value||'').trim();
       if (el.required && !value) { setError(el, 'This field is required.'); return false; }
@@ -604,47 +576,25 @@ document.addEventListener('DOMContentLoaded', () => {
       if (el.id==='dfWhatsapp' && value) { const d=value.replace(/\D/g,'').replace(/^91(?=\d{10}$)/,''); if(!/^[6-9]\d{9}$/.test(d)) { setError(el,'Please enter a valid 10-digit Indian mobile number.'); return false; } el.value=d; }
       return true;
     }
-    function validateStep(index) {
+
+    function validateForm() {
       let ok=true;
-      steps[index].querySelectorAll('input[required],select[required]').forEach(el => { if(!validateElement(el)) ok=false; });
-      if(index===2) {
-        if(!form.querySelector('input[name="programInterest"]:checked')) { document.getElementById('programInterestGroup').classList.add('has-error'); document.getElementById('programInterestError').textContent='Please select at least one program.'; ok=false; }
-        if(!form.querySelector('input[name="careerChallenge"]:checked')) { document.getElementById('careerChallengeGroup').classList.add('has-error'); document.getElementById('careerChallengeError').textContent='Please select your biggest career challenge.'; ok=false; }
-      }
-      if(!ok) { statusEl.textContent='Please complete the highlighted fields.'; statusEl.className='discovery-form-status is-error'; const first=steps[index].querySelector('.has-error input, .has-error select'); first?.focus(); }
+      form.querySelectorAll('input[required]').forEach(el => { if(!validateElement(el)) ok=false; });
+      if(!ok) { statusEl.textContent='Please complete the highlighted fields.'; statusEl.className='discovery-form-status is-error'; const first=form.querySelector('.has-error input'); first?.focus(); }
       else { statusEl.textContent=''; statusEl.className='discovery-form-status'; }
       return ok;
     }
 
-    function showStep(index) {
-      // Defensive clamp: showStep can never be asked to render a step
-      // outside the real 0..totalSteps-1 range, so "Step 4 of 3" can't
-      // be produced even by a future/indirect caller.
-      index = Math.max(0, Math.min(index, totalSteps - 1));
-      currentStep=index;
-      if (formProgress) formProgress.hidden = false;
-      steps.forEach((s,i)=>{s.hidden=i!==index;s.classList.toggle('is-active',i===index)});
-      fill.style.width=((index+1)/totalSteps*100)+'%'; stepLabel.textContent=`Step ${index+1} of ${totalSteps}`; stepName.textContent=stepNames[index];
+    form.querySelectorAll('.language-toggle').forEach(btn => btn.addEventListener('click', () => { const target=document.getElementById(btn.dataset.target); const open=btn.getAttribute('aria-expanded')==='true'; btn.setAttribute('aria-expanded', String(!open)); target.hidden=open; }));
 
-      const isFinalStep = index === totalSteps - 1;
-      backBtn.hidden = index === 0;
-      nextBtn.hidden = isFinalStep;      // Continue is fully hidden on Step 3
-      submitBtn.hidden = !isFinalStep;   // Submit only appears on Step 3
-      steps[index].querySelector('input,select')?.focus({preventScroll:true});
-    }
-    nextBtn.addEventListener('click', () => {
-      if (!validateStep(currentStep)) return;
-      // Strict guard: Continue can only ever move within the real
-      // data-collection steps. It must never reach/create a Step 4, and
-      // it must never be the thing that reveals the confirmation screen
-      // — that only happens after a successful form submit.
-      if (currentStep < totalSteps - 1) {
-        currentStep++;
-        showStep(currentStep);
-      }
+    // Blur only validates once the person has typed something (so we can
+    // catch format errors like a bad email) or after they've already
+    // tried to submit once (so remaining empty fields get flagged).
+    form.querySelectorAll('input').forEach(el=>{
+      el.addEventListener('blur',()=>{ if(attemptedSubmit || (el.value||'').trim()) validateElement(el); });
+      el.addEventListener('input',()=>clearError(el));
+      el.addEventListener('change',()=>clearError(el));
     });
-    backBtn.addEventListener('click',()=>showStep(Math.max(0,currentStep-1)));
-    form.querySelectorAll('input,select').forEach(el=>{ el.addEventListener('blur',()=>{ if(el.required) validateElement(el); }); el.addEventListener('input',()=>clearError(el)); el.addEventListener('change',()=>clearError(el)); });
 
     const params=new URLSearchParams(location.search);
     const tracking={dfUtmSource:'utm_source',dfUtmMedium:'utm_medium',dfUtmCampaign:'utm_campaign',dfCampaign:'campaign'};
@@ -654,9 +604,10 @@ document.addEventListener('DOMContentLoaded', () => {
     document.getElementById('dfLeadId').value=generateLeadId();
 
     form.addEventListener('submit', async (event) => {
+      attemptedSubmit = true;
   event.preventDefault();
 
-  if (!validateStep(2)) return;
+  if (!validateForm()) return;
 
   const endpointConfigured = isConfiguredHttpUrl(
     OPSWALLAH_FORM_CONFIG.formEndpoint
@@ -683,9 +634,6 @@ document.addEventListener('DOMContentLoaded', () => {
 
   const payload =
     Object.fromEntries(formData.entries());
-
-  payload.programInterest =
-    formData.getAll('programInterest');
 
   /*
    * Google Apps Script reads these values through e.parameter.
@@ -769,11 +717,6 @@ document.addEventListener('DOMContentLoaded', () => {
     form.hidden = true;
     successState.hidden = false;
 
-    // The success/payment screen is not one of the formSteps — completely
-    // hide "Step X of 3" and the progress bar rather than advancing
-    // currentStep to a non-existent 4th step.
-    if (formProgress) formProgress.hidden = true;
-
     document
       .getElementById('successFirstName')
       .textContent =
@@ -838,7 +781,6 @@ document.addEventListener('DOMContentLoaded', () => {
   }
 });
 
-    updateEducationFields(); showStep(0);
   }
 
   // ---- Official Domain Verification popup ----
