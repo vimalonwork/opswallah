@@ -255,7 +255,7 @@ document.addEventListener('DOMContentLoaded', () => {
     // Industry Topics" heading/CTA copy.
     const INDUSTRY_KEYWORDS = [
       'UPI', 'BBPS', 'KYC', 'AML', 'Cards', 'Visa', 'RuPay', 'NPCI', 'NACH',
-      'Excel' 
+      'Excel', 'Risk', 'RBI'
     ];
 
     // Reuses the same accent palette already used elsewhere on the site
