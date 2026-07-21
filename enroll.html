@@ -1,0 +1,229 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="description" content="Choose your OpsWallah learning track — Excel Mastery or Excel + Banking/FinTech Operations."><link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=Poppins:wght@500;600;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet"><script src="https://unpkg.com/lucide@latest/dist/umd/lucide.min.js" defer></script><link rel="stylesheet" href="style.css?v=20260713-v1">
+<style>
+  .offer-hero{
+    background:linear-gradient(160deg, #0F172A 0%, #1D4ED8 100%);
+    color:#fff;
+    padding:56px 0 40px;
+    text-align:center;
+  }
+  .offer-eyebrow{
+    font-family:var(--font-body, 'Inter', sans-serif);
+    font-size:13px;
+    letter-spacing:.08em;
+    text-transform:uppercase;
+    color:var(--color-accent, #F59E0B);
+    font-weight:600;
+    margin:0 0 12px;
+  }
+  .offer-hero h1{
+    font-family:var(--font-heading, 'Poppins', sans-serif);
+    font-size:clamp(26px,4vw,38px);
+    margin:0 0 14px;
+    line-height:1.25;
+    color:#fff !important;
+  }
+  .offer-hero p{
+    font-family:var(--font-body,'Inter',sans-serif);
+    font-size:15.5px;
+    color:#D8DEEE;
+    max-width:56ch;
+    margin:0 auto;
+  }
+  .enroll-body{padding:44px 0 60px;}
+  .enroll-grid{
+    display:grid;
+    grid-template-columns:1fr 1fr;
+    gap:22px;
+    max-width:920px;
+    margin:0 auto;
+    align-items:stretch;
+  }
+  .enroll-card{
+    background:#fff;
+    border:1px solid var(--color-border,#E2E8F0);
+    border-radius:var(--radius-lg,24px);
+    padding:28px 26px;
+    display:flex;
+    flex-direction:column;
+    box-shadow:var(--shadow-sm);
+    position:relative;
+  }
+  .enroll-card.is-featured{
+    border:2px solid var(--color-primary,#2563EB);
+    box-shadow:var(--shadow-lg);
+  }
+  .enroll-badge{
+    position:absolute;
+    top:-13px;
+    left:50%;
+    transform:translateX(-50%);
+    background:var(--color-primary,#2563EB);
+    color:#fff;
+    font-family:var(--font-body,'Inter',sans-serif);
+    font-size:11.5px;
+    font-weight:700;
+    letter-spacing:.03em;
+    text-transform:uppercase;
+    padding:5px 14px;
+    border-radius:999px;
+    white-space:nowrap;
+  }
+  .enroll-card h2{
+    font-family:var(--font-heading,'Poppins',sans-serif);
+    font-size:19px;
+    font-weight:600;
+    color:var(--color-heading,#0F172A);
+    margin:8px 0 6px;
+  }
+  .enroll-price-row{
+    display:flex;
+    align-items:baseline;
+    gap:10px;
+    flex-wrap:wrap;
+    margin-bottom:4px;
+  }
+  .enroll-price-old{
+    font-family:var(--font-body,'Inter',sans-serif);
+    font-size:15px;
+    color:#94A3B8;
+    text-decoration:line-through;
+  }
+  .enroll-price-new{
+    font-family:var(--font-heading,'Poppins',sans-serif);
+    font-size:30px;
+    font-weight:700;
+    color:var(--color-primary-dark,#1D4ED8);
+  }
+  .enroll-save{
+    font-family:var(--font-body,'Inter',sans-serif);
+    font-size:12px;
+    font-weight:600;
+    background:rgba(245,158,11,.15);
+    color:#B45309;
+    padding:3px 9px;
+    border-radius:999px;
+  }
+  .enroll-partial{
+    font-family:var(--font-body,'Inter',sans-serif);
+    font-size:12.5px;
+    color:var(--color-body,#475569);
+    margin-bottom:16px;
+  }
+  .enroll-feature-list{
+    list-style:none;
+    margin:0 0 22px;
+    padding:0;
+    display:grid;
+    gap:10px;
+    flex:1;
+  }
+  .enroll-feature-list li{
+    display:flex;
+    align-items:flex-start;
+    gap:9px;
+    font-family:var(--font-body,'Inter',sans-serif);
+    font-size:14px;
+    line-height:1.5;
+    color:var(--color-heading,#0F172A);
+  }
+  .enroll-feature-list i{
+    color:var(--color-primary,#2563EB);
+    flex-shrink:0;
+    margin-top:2px;
+    width:16px;
+    height:16px;
+  }
+  .enroll-feature-list.enroll-bonus li i{color:#2E7D5B;}
+  .enroll-bonus-label{
+    font-family:var(--font-body,'Inter',sans-serif);
+    font-size:11.5px;
+    font-weight:700;
+    letter-spacing:.03em;
+    text-transform:uppercase;
+    color:#2E7D5B;
+    margin:2px 0 10px;
+  }
+  .enroll-card .btn{width:100%;font-size:15px;padding:13px 20px;}
+  .enroll-match-note{
+    background:#EFF6FF;
+    border:1px solid #BFDBFE;
+    border-radius:10px;
+    padding:15px 18px;
+    font-family:var(--font-body,'Inter',sans-serif);
+    font-size:13.5px;
+    line-height:1.55;
+    color:var(--color-heading,#0F172A);
+    max-width:920px;
+    margin:26px auto 0;
+  }
+  .enroll-match-note strong{color:var(--color-primary-dark,#1D4ED8);}
+  @media (max-width:720px){
+    .enroll-grid{grid-template-columns:1fr;}
+  }
+</style>
+<title>Choose Your Learning Track — OpsWallah</title></head>
+<body class="result-page offer-page">
+<header class="result-header"><div class="container"><a href="index.html" aria-label="OpsWallah home"><img src="assets/logo.png" alt="OpsWallah — Real Operations. Real Careers."></a></div></header>
+
+<section class="offer-hero">
+  <div class="container">
+    <p class="offer-eyebrow">Limited-time offer for Discovery Session graduates</p>
+    <h1>Choose Your Learning Track</h1>
+    <p>Two ways to go from "bas graduate hoon" to career-ready. Pick the one that fits where you want to go.</p>
+  </div>
+</section>
+
+<main class="enroll-body">
+  <div class="container">
+    <div class="enroll-grid">
+
+      <div class="enroll-card">
+        <h2>Excel Mastery</h2>
+        <div class="enroll-price-row">
+          <span class="enroll-price-old">₹3,599</span>
+          <span class="enroll-price-new">₹2,099</span>
+          <span class="enroll-save">Save ₹1,500</span>
+        </div>
+        <p class="enroll-partial">&nbsp;</p>
+        <ul class="enroll-feature-list">
+          <li><i data-lucide="check-circle-2"></i> Excel basics to advanced techniques</li>
+          <li><i data-lucide="check-circle-2"></i> Category-wise formulas &amp; their real-world application</li>
+          <li><i data-lucide="check-circle-2"></i> Building interactive dashboards</li>
+          <li><i data-lucide="check-circle-2"></i> Solving real business problems using Excel</li>
+        </ul>
+        <a class="btn btn-primary" href="https://rzp.io/rzp/iFgjasyr">Enroll Now — ₹2,099</a>
+      </div>
+
+      <div class="enroll-card is-featured">
+        <span class="enroll-badge">Complete Track</span>
+        <h2>Excel + Banking/FinTech Ops</h2>
+        <div class="enroll-price-row">
+          <span class="enroll-price-old">₹7,999</span>
+          <span class="enroll-price-new">₹3,499</span>
+          <span class="enroll-save">Save ₹4,500</span>
+        </div>
+        <p class="enroll-partial">Partial payment accepted — pay in installments.</p>
+        <ul class="enroll-feature-list">
+          <li><i data-lucide="check-circle-2"></i> Everything in Excel Mastery</li>
+          <li><i data-lucide="check-circle-2"></i> Building interactive dashboards</li>
+        </ul>
+        <p class="enroll-bonus-label">Banking &amp; FinTech Ops Add-on</p>
+        <ul class="enroll-feature-list enroll-bonus">
+          <li><i data-lucide="plus-circle"></i> Fundamentals of Banking &amp; FinTech products</li>
+          <li><i data-lucide="plus-circle"></i> KYC, AML, UPI, NEFT/RTGS, Cards, BBPS/Bharat Connect</li>
+          <li><i data-lucide="plus-circle"></i> 15+ more banking/FinTech products &amp; concepts</li>
+        </ul>
+        <a class="btn btn-primary" href="https://rzp.io/rzp/nSt02UB">Enroll Now — ₹3,499</a>
+      </div>
+
+    </div>
+
+    <div class="enroll-match-note">
+      <strong>Important:</strong> Please use the same phone number and email at checkout that you used when booking your Discovery Session. This lets our team match your enrolment to your profile without any delay — this matters even more if you're paying in installments.
+    </div>
+  </div>
+</main>
+
+<footer class="result-footer"><p>Official Website: <a href="https://opswallah.in">opswallah.in</a> · Available exclusively on the .in domain.</p></footer>
+<script>document.addEventListener('DOMContentLoaded',()=>{if(window.lucide){lucide.createIcons();}});</script>
+</body></html>

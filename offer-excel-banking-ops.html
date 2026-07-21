@@ -1,22 +1,26 @@
-<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=Poppins:wght@500;600;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet"><script src="https://unpkg.com/lucide@latest/dist/umd/lucide.min.js" defer></script><link rel="stylesheet" href="style.css?v=20260720-v2">
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=Poppins:wght@500;600;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet"><script src="https://unpkg.com/lucide@latest/dist/umd/lucide.min.js" defer></script><link rel="stylesheet" href="style.css?v=20260713-v1">
 <style>
+  /* Offer-page additions — scoped, layered on top of the site's own style.css.
+     Colors now pull from the site's real design tokens (--color-primary,
+     --color-accent, --color-heading) defined in style.css, instead of the
+     old --charcoal/--accent fallbacks that had no matching variables. */
   .offer-hero{
-    background:var(--charcoal,#1C1C2E);
+    background:linear-gradient(160deg, #0F172A 0%, #1D4ED8 100%);
     color:#fff;
     padding:56px 0 40px;
     text-align:center;
   }
   .offer-eyebrow{
-    font-family:'Inter',sans-serif;
+    font-family:var(--font-body, 'Inter', sans-serif);
     font-size:13px;
     letter-spacing:.08em;
     text-transform:uppercase;
-    color:var(--accent,#D9772E);
+    color:var(--color-accent, #F59E0B);
     font-weight:600;
     margin:0 0 12px;
   }
   .offer-hero h1{
-    font-family:'Poppins',sans-serif;
+    font-family:var(--font-heading, 'Poppins', sans-serif);
     font-size:clamp(26px,4vw,38px);
     margin:0 0 18px;
     line-height:1.25;
@@ -31,39 +35,39 @@
     margin-top:8px;
   }
   .offer-price-old{
-    font-family:'Inter',sans-serif;
+    font-family:var(--font-body, 'Inter', sans-serif);
     font-size:20px;
-    color:#B9B9C7;
+    color:#B9C2D9;
     text-decoration:line-through;
   }
   .offer-price-new{
-    font-family:'Poppins',sans-serif;
+    font-family:var(--font-heading, 'Poppins', sans-serif);
     font-size:40px;
     font-weight:700;
-    color:var(--accent,#D9772E);
+    color:var(--color-accent, #F59E0B);
   }
   .offer-price-save{
-    font-family:'Inter',sans-serif;
+    font-family:var(--font-body, 'Inter', sans-serif);
     font-size:13px;
     font-weight:600;
-    background:rgba(217,119,46,.15);
-    color:var(--accent,#D9772E);
+    background:rgba(245,158,11,.18);
+    color:var(--color-accent, #F59E0B);
     padding:4px 10px;
     border-radius:999px;
   }
   .offer-price-partial{
-    font-family:'Inter',sans-serif;
+    font-family:var(--font-body, 'Inter', sans-serif);
     font-size:13px;
-    color:#D8D8E4;
+    color:#D8DEEE;
     margin-top:10px;
   }
   .offer-body{padding:44px 0;}
   .offer-section-title{
-    font-family:'Poppins',sans-serif;
+    font-family:var(--font-heading, 'Poppins', sans-serif);
     font-size:20px;
     font-weight:600;
     margin:0 0 16px;
-    color:var(--charcoal,#1C1C2E);
+    color:var(--color-heading, #0F172A);
   }
   .offer-feature-list{
     list-style:none;
@@ -76,13 +80,13 @@
     display:flex;
     align-items:flex-start;
     gap:10px;
-    font-family:'Inter',sans-serif;
+    font-family:var(--font-body, 'Inter', sans-serif);
     font-size:15px;
     line-height:1.5;
-    color:var(--charcoal,#1C1C2E);
+    color:var(--color-heading, #0F172A);
   }
   .offer-feature-list i{
-    color:var(--accent,#D9772E);
+    color:var(--color-primary, #2563EB);
     flex-shrink:0;
     margin-top:2px;
     width:18px;
@@ -90,7 +94,7 @@
   }
   .offer-feature-list.offer-feature-bonus li i{color:#2E7D5B;}
   .offer-bonus-label{
-    font-family:'Inter',sans-serif;
+    font-family:var(--font-body, 'Inter', sans-serif);
     font-size:13px;
     font-weight:600;
     letter-spacing:.03em;
@@ -99,17 +103,17 @@
     margin:28px 0 12px;
   }
   .offer-match-note{
-    background:#FBF3EC;
-    border:1px solid #F0DCC8;
+    background:#EFF6FF;
+    border:1px solid #BFDBFE;
     border-radius:10px;
     padding:16px 18px;
-    font-family:'Inter',sans-serif;
+    font-family:var(--font-body, 'Inter', sans-serif);
     font-size:14px;
     line-height:1.55;
-    color:var(--charcoal,#1C1C2E);
+    color:var(--color-heading, #0F172A);
     margin:32px 0;
   }
-  .offer-match-note strong{color:var(--accent,#D9772E);}
+  .offer-match-note strong{color:var(--color-primary-dark, #1D4ED8);}
   .offer-cta-wrap{text-align:center;}
   .offer-cta-wrap .btn{font-size:16px;padding:14px 32px;}
   @media (max-width:640px){
@@ -157,6 +161,8 @@
     <div class="offer-cta-wrap">
       <a class="btn btn-primary" href="https://rzp.io/rzp/nSt02UB">Enroll Now — ₹3,499</a>
     </div>
+
+    <p style="text-align:center;margin-top:18px;"><a href="enroll.html" style="font-family:var(--font-body,'Inter',sans-serif);font-size:13.5px;color:var(--color-primary,#2563EB);text-decoration:none;font-weight:600;">← Compare with Excel Mastery only</a></p>
   </div>
 </main>
 
