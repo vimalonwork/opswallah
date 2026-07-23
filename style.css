@@ -1710,17 +1710,19 @@ body.wa-no-scroll {
   height: 60px;
   width: 60px;
   padding: 0;
-  border: 1px solid rgba(37, 99, 235, 0.18);
+  border: 1px solid rgba(245, 158, 11, 0.35);
   border-radius: 999px;
   overflow: hidden;
   text-decoration: none;
 
-  background: rgba(248, 250, 252, 0.9);
+  background: rgba(255, 247, 224, 0.95);
   backdrop-filter: blur(10px);
   color: var(--color-primary-dark);
   cursor: pointer;
 
-  box-shadow: var(--shadow-lg);
+  box-shadow:
+    0 10px 26px rgba(245, 158, 11, 0.22),
+    0 3px 10px rgba(15, 23, 42, 0.12);
 
   transition: width 0.35s cubic-bezier(.2,.8,.2,1),
               box-shadow 0.25s ease,
@@ -1730,11 +1732,11 @@ body.wa-no-scroll {
 
 .qb-float-btn:hover,
 .qb-float-btn:focus-visible {
-  width: 172px;
+  width: 224px;
   padding-right: 20px;
-  background: rgba(248, 250, 252, 0.97);
+  background: rgba(255, 247, 224, 1);
   box-shadow:
-    0 16px 40px rgba(37, 99, 235, 0.22),
+    0 16px 40px rgba(245, 158, 11, 0.32),
     0 6px 16px rgba(15, 23, 42, 0.14);
   transform: translateY(calc(-50% - 2px));
 }
@@ -1755,7 +1757,7 @@ body.wa-no-scroll {
   display: flex;
   align-items: center;
   justify-content: center;
-  color: var(--color-primary);
+  color: var(--color-primary-dark);
 }
 
 .qb-float-icon svg {
