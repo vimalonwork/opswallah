@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Book Your OpsWallah Discovery Session | OpsWallah</title>
+<meta name="description" content="Book your ₹29 OpsWallah Discovery Session — a short one-to-one call to understand your background and suggest a practical learning direction.">
+
+<!-- Google Fonts -->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@500;600;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+<!-- Lucide Icons -->
+<script src="https://unpkg.com/lucide@latest/dist/umd/lucide.min.js" defer></script>
+
+<link rel="stylesheet" href="style.css?v=20260723-v1">
+</head>
+<body>
+
+<!-- ============ SIMPLE HEADER ============ -->
+<header class="site-header" id="siteHeader">
+  <div class="container header-inner">
+    <a href="index.html" class="logo" aria-label="OpsWallah home">
+      <img src="assets/logo.png" alt="OpsWallah Logo" class="site-logo" style="width: 200px; height: auto;">
+    </a>
+    <div class="header-actions">
+      <a href="index.html" class="btn btn-outline btn-small">
+        <i data-lucide="arrow-left"></i> Back to Home
+      </a>
+    </div>
+  </div>
+</header>
+
+<main id="top">
+
+  <!-- ============ DISCOVERY FORM ============ -->
+  <section class="section discovery reveal" id="discovery-form" aria-labelledby="discoveryFormTitle">
+    <div class="container discovery-shell">
+      <aside class="discovery-aside" aria-label="Discovery Session information">
+        <p class="eyebrow">₹29 Discovery Session</p>
+        <h2>Book Your OpsWallah Discovery Session</h2>
+        <p class="discovery-aside-desc" style="margin-bottom:18px;color:#dbeafe;font-size:14.5px;">A short one-to-one discussion to understand your current situation, answer your questions and suggest a practical learning direction.</p>
+        <ul class="discovery-benefits" role="list">
+          <li><i data-lucide="zap"></i><span>Book in under a minute</span></li>
+          <li><i data-lucide="message-circle-question"></i><span>We'll ask about your background on WhatsApp next</span></li>
+          <li><i data-lucide="route"></i><span>Get a learning path suited to you</span></li>
+          <li><i data-lucide="shield-check"></i><span>Get clear answers before enrolling</span></li>
+        </ul>
+        <p class="discovery-aside-note"><i data-lucide="shield-check"></i> Online Session · Practical Guidance · No False Promises</p>
+      </aside>
+
+      <div class="discovery-card">
+        <div class="discovery-card-head">
+          <p class="eyebrow">BOOK YOUR DISCOVERY SESSION</p>
+          <h2 class="section-title" id="discoveryFormTitle">Let's Get You Booked In</h2>
+          <p class="discovery-subtitle">Takes less than a minute. We'll ask a couple of quick questions about your background right after you book, on WhatsApp. Booking token: <strong>₹29</strong>.</p>
+        </div>
+
+        <form class="discovery-form" id="discoveryForm" novalidate>
+          <section aria-labelledby="discoveryFormTitle">
+            <div class="discovery-form-grid">
+              <div class="form-field"><label for="dfName">Full Name *</label><input type="text" id="dfName" name="fullName" autocomplete="name" placeholder="Enter your full name" required><p class="field-error" id="dfNameError" role="alert"></p></div>
+              <div class="form-field"><label for="dfWhatsapp">WhatsApp / Contact Number *</label><input type="tel" id="dfWhatsapp" name="whatsappNumber" autocomplete="tel" inputmode="tel" placeholder="Enter your WhatsApp number" required><p class="field-error" id="dfWhatsappError" role="alert"></p></div>
+              <div class="form-field"><label for="dfEmail">Email Address *</label><input type="email" id="dfEmail" name="email" autocomplete="email" placeholder="Enter your email address" required><p class="field-error" id="dfEmailError" role="alert"></p></div>
+            </div>
+
+            <div class="consent-card"><label class="checkbox-label"><input type="checkbox" id="dfConsent" name="communicationConsent" required><span>I agree to receive calls, WhatsApp messages, SMS and emails from OpsWallah regarding my Discovery Session, learning programs, schedules and relevant updates. I understand that I may opt out of promotional communication at any time.</span></label><button type="button" class="language-toggle" data-target="consentHindi" aria-expanded="false">हिन्दी में पढ़ें</button><p id="consentHindi" class="language-copy" hidden>मैं OpsWallah से अपने Discovery Session, Learning Programs, Batch Schedules तथा संबंधित अपडेट्स के लिए कॉल, WhatsApp संदेश, SMS एवं ईमेल प्राप्त करने के लिए सहमत हूँ। मैं समझता/समझती हूँ कि मैं किसी भी समय प्रचार संबंधी संदेश प्राप्त करना बंद करने का अनुरोध कर सकता/सकती हूँ।</p><p class="field-error" id="dfConsentError" role="alert"></p></div>
+            <div class="consent-card"><label class="checkbox-label"><input type="checkbox" id="dfAcknowledgement" name="programAcknowledgement" required><span>I understand that OpsWallah is an independent career-readiness platform focused on practical industry learning. It is not a placement agency and does not guarantee employment or job placement.</span></label><button type="button" class="language-toggle" data-target="ackHindi" aria-expanded="false">हिन्दी में पढ़ें</button><p id="ackHindi" class="language-copy" hidden>मैं समझता/समझती हूँ कि OpsWallah एक स्वतंत्र Career Readiness Platform है, जो Practical Industry Learning पर केंद्रित है। यह कोई Placement Agency नहीं है और नौकरी या प्लेसमेंट की गारंटी नहीं देता।</p><p class="field-error" id="dfAcknowledgementError" role="alert"></p></div>
+          </section>
+
+          <input type="hidden" name="leadId" id="dfLeadId">
+          <input type="hidden" name="utm_source" id="dfUtmSource">
+          <input type="hidden" name="utm_medium" id="dfUtmMedium">
+          <input type="hidden" name="utm_campaign" id="dfUtmCampaign">
+          <input type="hidden" name="campaign" id="dfCampaign">
+          <input type="hidden" name="landing_page" id="dfLandingPage">
+          <input type="hidden" name="submitted_at" id="dfSubmittedAt">
+
+          <p class="discovery-form-status" id="discoveryFormStatus" role="status" aria-live="polite"></p>
+          <p class="discovery-form-reassurance"><i data-lucide="lock"></i> No spam. No pressure to enroll. Just your session details, sent straight to WhatsApp.</p>
+          <div class="form-actions"><button type="submit" class="btn btn-primary btn-block form-submit" id="discoverySubmitBtn">Submit &amp; Continue to Payment <i data-lucide="arrow-right"></i></button></div>
+          <p class="discovery-form-note">Your details will only be used to respond to your enquiry and manage relevant OpsWallah communication.</p>
+        </form>
+
+        <div class="form-success-state" id="formSuccessState" hidden tabindex="-1">
+          <span class="status-icon status-icon-success"><i data-lucide="check"></i></span>
+          <h3>Thanks, <span id="successFirstName">there</span>! Your details have been received.</h3>
+          <p>We now have a better understanding of your educational background and career goals.</p>
+          <p>Complete the ₹29 booking token to confirm your OpsWallah Discovery Session request.</p>
+          <a href="#" class="btn btn-primary btn-block" id="paymentContinueBtn">Pay ₹29 & Confirm Request <i data-lucide="arrow-right"></i></a>
+          <small>Secure payment · Your session timing will be coordinated after confirmation.</small>
+        </div>
+      </div>
+    </div>
+  </section>
+
+</main>
+
+<!-- ============ FOOTER ============ -->
+<footer class="site-footer">
+  <div class="container footer-inner">
+    <div class="footer-brand">
+      <a href="index.html" class="logo">
+        <img src="assets/logo.png" alt="OpsWallah Logo" class="footer-logo" style="width: 250px;">
+      </a>
+    </div>
+
+    <div class="footer-links">
+      <h4>Quick Links</h4>
+      <a href="index.html">Home</a>
+      <a href="index.html#program">Program</a>
+      <a href="index.html#faqs">FAQs</a>
+    </div>
+
+    <div class="footer-links">
+      <h4>Legal</h4>
+      <a href="privacy-policy.html">Privacy Policy</a>
+      <a href="terms-and-conditions.html">Terms &amp; Conditions</a>
+      <a href="refund-policy.html">Refund &amp; Cancellation Policy</a>
+    </div>
+
+    <div class="footer-contact">
+      <h4>Get In Touch</h4>
+      <a href="mailto:hello@opswallah.in"><i data-lucide="mail"></i> hello@opswallah.in</a>
+      <a href="https://wa.me/919625963612" target="_blank" rel="noopener"><i data-lucide="message-circle"></i> WhatsApp Us (chat only)</a>
+    </div>
+  </div>
+
+  <div class="footer-bottom">
+    <p class="footer-official-domain">Official Website: <a href="https://opswallah.in">opswallah.in</a> · Available exclusively on the .in domain.</p>
+    <p>&copy; <span id="year"></span> OpsWallah. All rights reserved.</p>
+  </div>
+</footer>
+
+<script>document.getElementById('year').textContent = new Date().getFullYear();</script>
+<script src="discovery-form.js?v=20260723-v1" defer></script>
+</body>
+</html>

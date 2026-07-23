@@ -14,7 +14,7 @@
 <!-- Lucide Icons -->
 <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.min.js" defer></script>
 
-<link rel="stylesheet" href="style.css?v=20260713-v1">
+<link rel="stylesheet" href="style.css?v=20260723-v1">
 </head>
 <body>
 
@@ -34,7 +34,7 @@
     </nav>
 
     <div class="header-actions">
-      <a href="#discovery-form" class="btn btn-primary btn-small header-cta js-booking-cta">Book OpsWallah Discovery Session <span class="price-chip">₹29</span></a>
+      <a href="discovery_form.html" class="btn btn-primary btn-small header-cta">Book OpsWallah Discovery Session <span class="price-chip">₹29</span></a>
       <button class="hamburger" id="hamburgerBtn" aria-label="Open menu" aria-expanded="false" aria-controls="mobileMenu">
         <span></span><span></span><span></span>
       </button>
@@ -48,7 +48,7 @@
     <a href="#faqs">FAQs</a>
     <a href="#assessment">Discovery Session</a>
     <a href="#about">About</a>
-    <a href="#discovery-form" class="btn btn-primary btn-block js-booking-cta">Book OpsWallah Discovery Session ₹29</a>
+    <a href="discovery_form.html" class="btn btn-primary btn-block">Book OpsWallah Discovery Session ₹29</a>
   </div>
 </header>
 
@@ -80,7 +80,7 @@
         <p class="hero-value">Build practical skills in <strong>Excel</strong>, <strong>Business Operations</strong>, <strong>Real FinTech</strong> and <strong>Corporate Readiness</strong>.</p>
 
         <div class="hero-cta-row">
-          <a href="#discovery-form" class="btn btn-primary btn-large js-booking-cta">
+          <a href="discovery_form.html" class="btn btn-primary btn-large">
             Book OpsWallah Discovery Session
             <span class="price-chip price-chip-large">₹29</span>
           </a>
@@ -409,69 +409,24 @@
         <p class="price-label">Book OpsWallah Discovery Session</p>
         <p class="price-amount">₹29</p>
         <p class="price-sub">Less than the cost of a pizza.</p>
-        <a href="#discovery-form" class="btn btn-primary btn-block js-booking-cta">
+        <a href="discovery_form.html" class="btn btn-primary btn-block">
   Book OpsWallah Discovery Session
 </a>
       </div>
     </div>
   </section>
 
-  <!-- ============ DISCOVERY FORM ============ -->
-  <section class="section discovery reveal" id="discovery-form" aria-labelledby="discoveryFormTitle">
-    <div class="container discovery-shell">
-      <aside class="discovery-aside" aria-label="Discovery Session information">
+  <!-- ============ DISCOVERY SESSION CTA (booking now happens on discovery_form.html) ============ -->
+  <section class="section discovery reveal" id="discovery-form" aria-labelledby="discoveryCtaTitle">
+    <div class="container">
+      <div class="discovery-card" style="max-width:640px;margin:0 auto;text-align:center;">
         <p class="eyebrow">₹29 Discovery Session</p>
-        <h2>Start with clarity, not guesswork.</h2>
-        <ul class="discovery-benefits" role="list">
-          <li><i data-lucide="zap"></i><span>Book in under a minute</span></li>
-          <li><i data-lucide="message-circle-question"></i><span>We'll ask about your background on WhatsApp next</span></li>
-          <li><i data-lucide="route"></i><span>Get a learning path suited to you</span></li>
-          <li><i data-lucide="shield-check"></i><span>Get clear answers before enrolling</span></li>
-        </ul>
-        <p class="discovery-aside-note"><i data-lucide="shield-check"></i> Online Session · Practical Guidance · No False Promises</p>
-      </aside>
-
-      <div class="discovery-card">
-        <div class="discovery-card-head">
-          <p class="eyebrow">BOOK YOUR DISCOVERY SESSION</p>
-          <h2 class="section-title" id="discoveryFormTitle">Let's Get You Booked In</h2>
-          <p class="discovery-subtitle">Takes less than a minute. We'll ask a couple of quick questions about your background right after you book, on WhatsApp.</p>
-        </div>
-
-        <form class="discovery-form" id="discoveryForm" novalidate>
-          <section aria-labelledby="discoveryFormTitle">
-            <div class="discovery-form-grid">
-              <div class="form-field"><label for="dfName">Full Name *</label><input type="text" id="dfName" name="fullName" autocomplete="name" placeholder="Enter your full name" required><p class="field-error" id="dfNameError" role="alert"></p></div>
-              <div class="form-field"><label for="dfWhatsapp">WhatsApp / Contact Number *</label><input type="tel" id="dfWhatsapp" name="whatsappNumber" autocomplete="tel" inputmode="tel" placeholder="Enter your WhatsApp number" required><p class="field-error" id="dfWhatsappError" role="alert"></p></div>
-              <div class="form-field"><label for="dfEmail">Email Address *</label><input type="email" id="dfEmail" name="email" autocomplete="email" placeholder="Enter your email address" required><p class="field-error" id="dfEmailError" role="alert"></p></div>
-            </div>
-
-            <div class="consent-card"><label class="checkbox-label"><input type="checkbox" id="dfConsent" name="communicationConsent" required><span>I agree to receive calls, WhatsApp messages, SMS and emails from OpsWallah regarding my Discovery Session, learning programs, schedules and relevant updates. I understand that I may opt out of promotional communication at any time.</span></label><button type="button" class="language-toggle" data-target="consentHindi" aria-expanded="false">हिन्दी में पढ़ें</button><p id="consentHindi" class="language-copy" hidden>मैं OpsWallah से अपने Discovery Session, Learning Programs, Batch Schedules तथा संबंधित अपडेट्स के लिए कॉल, WhatsApp संदेश, SMS एवं ईमेल प्राप्त करने के लिए सहमत हूँ। मैं समझता/समझती हूँ कि मैं किसी भी समय प्रचार संबंधी संदेश प्राप्त करना बंद करने का अनुरोध कर सकता/सकती हूँ।</p><p class="field-error" id="dfConsentError" role="alert"></p></div>
-            <div class="consent-card"><label class="checkbox-label"><input type="checkbox" id="dfAcknowledgement" name="programAcknowledgement" required><span>I understand that OpsWallah is an independent career-readiness platform focused on practical industry learning. It is not a placement agency and does not guarantee employment or job placement.</span></label><button type="button" class="language-toggle" data-target="ackHindi" aria-expanded="false">हिन्दी में पढ़ें</button><p id="ackHindi" class="language-copy" hidden>मैं समझता/समझती हूँ कि OpsWallah एक स्वतंत्र Career Readiness Platform है, जो Practical Industry Learning पर केंद्रित है। यह कोई Placement Agency नहीं है और नौकरी या प्लेसमेंट की गारंटी नहीं देता।</p><p class="field-error" id="dfAcknowledgementError" role="alert"></p></div>
-          </section>
-
-          <input type="hidden" name="leadId" id="dfLeadId">
-          <input type="hidden" name="utm_source" id="dfUtmSource">
-          <input type="hidden" name="utm_medium" id="dfUtmMedium">
-          <input type="hidden" name="utm_campaign" id="dfUtmCampaign">
-          <input type="hidden" name="campaign" id="dfCampaign">
-          <input type="hidden" name="landing_page" id="dfLandingPage">
-          <input type="hidden" name="submitted_at" id="dfSubmittedAt">
-
-          <p class="discovery-form-status" id="discoveryFormStatus" role="status" aria-live="polite"></p>
-          <p class="discovery-form-reassurance"><i data-lucide="lock"></i> No spam. No pressure to enroll. Just your session details, sent straight to WhatsApp.</p>
-          <div class="form-actions"><button type="submit" class="btn btn-primary btn-block form-submit" id="discoverySubmitBtn">Submit &amp; Continue to Payment <i data-lucide="arrow-right"></i></button></div>
-          <p class="discovery-form-note">Your details will only be used to respond to your enquiry and manage relevant OpsWallah communication.</p>
-        </form>
-
-        <div class="form-success-state" id="formSuccessState" hidden tabindex="-1">
-          <span class="status-icon status-icon-success"><i data-lucide="check"></i></span>
-          <h3>Thanks, <span id="successFirstName">there</span>! Your details have been received.</h3>
-          <p>We now have a better understanding of your educational background and career goals.</p>
-          <p>Complete the ₹29 booking token to confirm your OpsWallah Discovery Session request.</p>
-          <a href="#" class="btn btn-primary btn-block" id="paymentContinueBtn">Pay ₹29 & Confirm Request <i data-lucide="arrow-right"></i></a>
-          <small>Secure payment · Your session timing will be coordinated after confirmation.</small>
-        </div>
+        <h2 class="section-title" id="discoveryCtaTitle">Ready to Start With Clarity?</h2>
+        <p class="discovery-subtitle" style="margin:0 auto 24px;">Takes less than a minute to book. We'll ask a couple of quick questions about your background right after, on WhatsApp.</p>
+        <a href="discovery_form.html" class="btn btn-primary btn-block">
+          Book OpsWallah Discovery Session <span class="price-chip">₹29</span>
+        </a>
+        <p class="discovery-form-reassurance" style="margin-top:14px;justify-content:center;"><i data-lucide="lock"></i> No spam. No pressure to enroll. Just your session details, sent straight to WhatsApp.</p>
       </div>
     </div>
   </section>
@@ -674,6 +629,6 @@
   </div>
 </div>
 
-<script src="script.js?v=20260713-v1" defer></script>
+<script src="script.js?v=20260723-v1" defer></script>
 </body>
 </html>

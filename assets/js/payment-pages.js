@@ -227,7 +227,7 @@ Reference ID: ${data.referenceId}`;
     retryButton.href =
       catalogEntry.checkoutUrl ||
       OPSWALLAH_PAYMENT_CONFIG.paymentUrl ||
-      'index.html#discovery-form';
+      'discovery_form.html';
   }
 
   const downloadButton =
